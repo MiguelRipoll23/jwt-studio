@@ -12,3 +12,5 @@ A desktop app for generating and managing JWT's across multiple projects with di
 - Export/import all data as JSON
 - App settings: default algorithm, expiry, delete confirm, auto-copy
 - Light and dark mode
+
+![JWT Studio](screenshots/app.png)
