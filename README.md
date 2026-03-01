@@ -1,6 +1,6 @@
 # JWT Studio
 
-A local desktop app for generating and managing JWT tokens across multiple projects and signing algorithms.
+A desktop app for generating and managing JWT's across multiple projects with different signing algorithms.
 
 ## Features
 
