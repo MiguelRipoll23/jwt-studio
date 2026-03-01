@@ -126,7 +126,7 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
             size="xs"
             onClick={() => setShowTokenEdit(true)}
           >
-            {/* settings icon intentionally removed, replace with correct icon if needed */}
+            Edit
           </Button>
           <Button
             color="danger"
