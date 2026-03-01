@@ -103,6 +103,6 @@ jobs:
             --title "${{ steps.tag.outputs.name }}" \
             --generate-notes \
             $PRERELEASE_FLAG \
-            $(find release-artifacts -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" \))
+            $(find release-artifacts -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" \) -print0 | xargs -0)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
