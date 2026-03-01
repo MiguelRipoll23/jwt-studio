@@ -7,7 +7,8 @@ A desktop app for generating and managing JWT's across multiple projects with di
 - Organize tokens by project
 - Supports HMAC, RSA, ECDSA, RSA-PSS
 - Edit token payloads with live validation
-- One-click copy JWT
 - Light and dark mode
+
+## Demo
 
 ![JWT Studio](screenshots/app.png)
