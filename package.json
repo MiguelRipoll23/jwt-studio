@@ -1,7 +1,7 @@
 {
   "name": "jwt-studio",
   "private": true,
-  "version": "1.0.00.0.0",
+  "version": "1.0.1",
   "type": "module",
   "main": "dist-electron/main.js",
   "scripts": {
