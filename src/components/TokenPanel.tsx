@@ -5,7 +5,7 @@ import { Alert } from '@openai/apps-sdk-ui/components/Alert';
 import {
   Plus,
   Trash,
-  Settings,
+  EditPencil,
   Key,
 
   Clock,
@@ -91,7 +91,7 @@ export function TokenPanel({ store }: TokenPanelProps) {
               onClick={() => setShowProjectEdit(true)}
               title="Edit project"
             >
-              <Settings className="w-4 h-4" />
+              <EditPencil className="w-4 h-4" />
             </Button>
             <Button
               color="danger"
