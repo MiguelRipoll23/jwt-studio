@@ -12,6 +12,7 @@ import {
   TriangleExclamationErrorWarning,
   Key,
   Trash,
+  EditPencil,
 } from '@openai/apps-sdk-ui/components/Icon';
 import { getIcon } from './IconPicker';
 import type { ProjectStore } from '../store';
@@ -117,16 +118,18 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
       <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--alpha-08)] shrink-0">
         <div className="flex items-center gap-2">
           <TokenIcon className="w-5 h-5 text-[var(--gray-600)]" />
-          <h3 className="font-semibold text-[var(--gray-900)]">{selectedToken.name}</h3>
+          <h3 className="font-semibold text-[var(--gray-900)] mb-0.5">{selectedToken.name}</h3>
         </div>
         <div className="flex items-center gap-1">
           <Button
             color="secondary"
             variant="ghost"
             size="xs"
+            uniform
             onClick={() => setShowTokenEdit(true)}
+            title="Edit token"
           >
-            Edit
+            <EditPencil className="w-4 h-4" />
           </Button>
           <Button
             color="danger"
