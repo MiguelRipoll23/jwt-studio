@@ -4,6 +4,7 @@ import { Alert } from '@openai/apps-sdk-ui/components/Alert';
 import { Badge } from '@openai/apps-sdk-ui/components/Badge';
 import { Select } from '@openai/apps-sdk-ui/components/Select';
 import { Switch } from '@openai/apps-sdk-ui/components/Switch';
+import { applyDocumentTheme } from '@openai/apps-sdk-ui/theme';
 import {
   DownloadSimple,
   UploadDocuments,
@@ -20,9 +21,10 @@ import {
   Info,
   ArrowRotateCw,
 } from '@openai/apps-sdk-ui/components/Icon';
-import type { Project } from '../types';
+import type { Project, ThemeMode } from '../types';
 import { ALGORITHMS, DURATIONS } from '../types';
 import type { AppSettingsStore } from '../appSettings';
+import { THEME_KEY } from '../main';
 
 type Section = 'general' | 'appearance' | 'export-import' | 'about';
 
@@ -56,6 +58,21 @@ interface SettingsProps {
 export function Settings({ projects, onImport, onClose, appSettings }: SettingsProps) {
   const [section, setSection] = useState<Section>('general');
   const { settings, updateSettings } = appSettings;
+
+  function applyTheme(themeMode: ThemeMode) {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = themeMode === 'system' ? (prefersDark ? 'dark' : 'light') : themeMode;
+    applyDocumentTheme(theme);
+    localStorage.setItem(THEME_KEY, themeMode);
+    if (window.electronAPI?.setTitleBarColor) {
+      window.electronAPI.setTitleBarColor(theme);
+    }
+  }
+
+  function handleThemeChange(themeMode: ThemeMode) {
+    updateSettings({ themeMode });
+    applyTheme(themeMode);
+  }
 
   // Export state
   const [exportStatus, setExportStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -169,7 +186,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                         <p className="text-sm text-[var(--gray-800)]">Default algorithm</p>
                         <p className="text-xs text-[var(--gray-500)]">Used when creating a new project</p>
                       </div>
-                      <div className="w-32 shrink-0">
+                      <div className="w-40 shrink-0">
                         <Select
                           options={ALGORITHM_OPTIONS}
                           value={settings.defaultAlgorithm}
@@ -185,7 +202,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                         <p className="text-sm text-[var(--gray-800)]">Default token duration</p>
                         <p className="text-xs text-[var(--gray-500)]">Expiry applied to new project tokens</p>
                       </div>
-                      <div className="w-32 shrink-0">
+                      <div className="w-40 shrink-0">
                         <Select
                           options={DURATION_OPTIONS}
                           value={settings.defaultDuration}
@@ -277,7 +294,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                           { value: 'dark', label: 'Dark' },
                         ]}
                         value={settings.themeMode}
-                        onChange={opt => updateSettings({ themeMode: opt.value as any })}
+                        onChange={opt => handleThemeChange(opt.value as ThemeMode)}
                         size="sm"
                         variant="outline"
                       />
