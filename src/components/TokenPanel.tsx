@@ -47,8 +47,10 @@ function TokenItem({
       tabIndex={0}
       onKeyDown={e => e.key === 'Enter' && onClick()}
     >
-      <Icon className="w-5 h-5 shrink-0 text-[var(--gray-600)]" />
-      <span className="flex-1 truncate text-sm font-medium">{token.name}</span>
+      <div className="flex items-center gap-2">
+        <Icon className="w-5 h-5 shrink-0 text-[var(--gray-600)]" />
+        <span className="truncate text-sm font-medium">{token.name}</span>
+      </div>
 
     </div>
   );
