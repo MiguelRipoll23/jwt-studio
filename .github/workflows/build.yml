@@ -1,5 +1,9 @@
 name: Build & Release
 
+concurrency:
+  group: build-and-release-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches:
@@ -11,13 +15,6 @@ permissions:
   contents: write
 
 jobs:
-  cancel-previous:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.12.1
-        with:
-          access_token: ${{ secrets.GITHUB_TOKEN }}
   build:
     name: Build (${{ matrix.os }})
     strategy:
