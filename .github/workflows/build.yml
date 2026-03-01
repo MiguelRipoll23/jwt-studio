@@ -93,16 +93,39 @@ jobs:
           pattern: jwt-studio-*-${{ github.sha }}
           merge-multiple: true
 
+      - name: Debug artifact structure
+        run: |
+          echo "=== Checking release-artifacts directory ==="
+          ls -laR release-artifacts/ || echo "Directory empty or not found"
+
       - name: Create GitHub Release and Upload Assets
         run: |
           PRERELEASE_FLAG=""
           if [ "${{ steps.tag.outputs.prerelease }}" = "true" ]; then
             PRERELEASE_FLAG="--prerelease"
           fi
-          gh release create "${{ steps.tag.outputs.tag }}" \
-            --title "${{ steps.tag.outputs.name }}" \
-            --generate-notes \
-            $PRERELEASE_FLAG \
-            $(find release-artifacts -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" \) -print0 | xargs -0)
+          
+          # Collect all release assets recursively
+          ASSETS=()
+          while IFS= read -r -d '' file; do
+            ASSETS+=("$file")
+            echo "Found asset: $file"
+          done < <(find release-artifacts -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" \) -print0 2>/dev/null)
+          
+          # Create release with assets
+          if [ ${#ASSETS[@]} -gt 0 ]; then
+            echo "Creating release with ${#ASSETS[@]} asset(s)..."
+            gh release create "${{ steps.tag.outputs.tag }}" \
+              --title "${{ steps.tag.outputs.name }}" \
+              --generate-notes \
+              $PRERELEASE_FLAG \
+              "${ASSETS[@]}"
+          else
+            echo "No release assets found, creating release without assets..."
+            gh release create "${{ steps.tag.outputs.tag }}" \
+              --title "${{ steps.tag.outputs.name }}" \
+              --generate-notes \
+              $PRERELEASE_FLAG
+          fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
