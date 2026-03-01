@@ -7,8 +7,6 @@ import {
   Trash,
   EditPencil,
   Key,
-
-  Clock,
   ApiKey,
   Folder,
 } from '@openai/apps-sdk-ui/components/Icon';

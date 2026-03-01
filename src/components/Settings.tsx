@@ -24,10 +24,11 @@ import type { Project } from '../types';
 import { ALGORITHMS, DURATIONS } from '../types';
 import type { AppSettingsStore } from '../appSettings';
 
-type Section = 'general' | 'export-import' | 'about';
+type Section = 'general' | 'appearance' | 'export-import' | 'about';
 
 const NAV: { id: Section; label: string; Icon: React.ComponentType<React.SVGProps<SVGSVGElement>> }[] = [
   { id: 'general', label: 'General', Icon: SettingsCog },
+  { id: 'appearance', label: 'Appearance', Icon: SettingsCog },
   { id: 'export-import', label: 'Export / Import', Icon: Nodes },
   { id: 'about', label: 'About', Icon: Info },
 ];
@@ -254,6 +255,34 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                       }
                     />
                   )}
+                </div>
+              </div>
+            )}
+
+            {/* ── APPEARANCE ── */}
+            {section === 'appearance' && (
+              <div className="flex flex-col gap-5">
+                <div>
+                  <h3 className="text-sm font-semibold text-[var(--gray-900)] mb-3">Theme</h3>
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-sm text-[var(--gray-800)]">Application theme</p>
+                      <p className="text-xs text-[var(--gray-500)]">Choose your preferred theme</p>
+                    </div>
+                    <div className="w-40 shrink-0">
+                      <Select
+                        options={[
+                          { value: 'system', label: 'Follow system' },
+                          { value: 'light', label: 'Light' },
+                          { value: 'dark', label: 'Dark' },
+                        ]}
+                        value={settings.themeMode}
+                        onChange={opt => updateSettings({ themeMode: opt.value as any })}
+                        size="sm"
+                        variant="outline"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             )}

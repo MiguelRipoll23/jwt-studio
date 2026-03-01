@@ -11,11 +11,14 @@ export function isHmacAlgorithm(alg: Algorithm): alg is HmacAlgorithm {
   return alg.startsWith('HS');
 }
 
+export type ThemeMode = 'system' | 'light' | 'dark';
+
 export interface AppSettings {
   defaultAlgorithm: Algorithm;
   defaultDuration: string;
   confirmDelete: boolean;
   autoCopyToken: boolean;
+  themeMode: ThemeMode;
 }
 
 export const SETTINGS_DEFAULTS: AppSettings = {
@@ -23,6 +26,7 @@ export const SETTINGS_DEFAULTS: AppSettings = {
   defaultDuration: '1 day',
   confirmDelete: true,
   autoCopyToken: false,
+  themeMode: 'system',
 };
 
 export interface AsymmetricSecret {
