@@ -1,6 +1,7 @@
-import { app, BrowserWindow, Menu, ipcMain, dialog, nativeTheme } from 'electron'
+import { app, BrowserWindow, Menu, ipcMain, dialog, nativeTheme, shell } from 'electron'
 import { fileURLToPath } from 'node:url'
 import { readFile, writeFile, mkdir } from 'node:fs/promises'
+import { request } from 'node:https'
 import path from 'node:path'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -89,6 +90,38 @@ ipcMain.handle('open-config', async (event) => {
 
 ipcMain.on('set-title-bar-color', (_event, theme: string) => {
   setTitleBarColor(theme);
+});
+
+// IPC: check GitHub for the latest release
+ipcMain.handle('check-for-updates', () => {
+  return new Promise<{ version: string; url: string } | null>((resolve) => {
+    const options = {
+      hostname: 'api.github.com',
+      path: '/repos/MiguelRipoll23/jwt-studio/releases/latest',
+      headers: { 'User-Agent': 'jwt-studio-app' },
+    };
+    const req = request(options, (res) => {
+      let body = '';
+      res.on('data', (chunk: Buffer) => { body += chunk.toString(); });
+      res.on('end', () => {
+        try {
+          const json = JSON.parse(body) as { tag_name?: string; html_url?: string };
+          if (!json.tag_name) return resolve(null);
+          const version = json.tag_name.replace(/^v/, '');
+          resolve({ version, url: json.html_url ?? 'https://github.com/MiguelRipoll23/jwt-studio/releases/latest' });
+        } catch {
+          resolve(null);
+        }
+      });
+    });
+    req.on('error', () => resolve(null));
+    req.end();
+  });
+});
+
+// IPC: open a URL in the system browser
+ipcMain.handle('open-external', (_event, url: string) => {
+  shell.openExternal(url);
 });
 
 app.whenReady().then(() => {

@@ -9,6 +9,8 @@ interface ElectronAPI {
   readStore: () => Promise<string | null>
   writeStore: (data: string) => Promise<void>
   setTitleBarColor: (theme: string) => void
+  checkForUpdates: () => Promise<{ version: string; url: string } | null>
+  openExternal: (url: string) => Promise<void>
 }
 
 interface Window {

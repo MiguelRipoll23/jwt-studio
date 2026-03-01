@@ -18,6 +18,7 @@ import {
   Nodes,
   Trash,
   Info,
+  ArrowRotateCw,
 } from '@openai/apps-sdk-ui/components/Icon';
 import type { Project } from '../types';
 import { ALGORITHMS, DURATIONS } from '../types';
@@ -33,6 +34,16 @@ const NAV: { id: Section; label: string; Icon: React.ComponentType<React.SVGProp
 
 const ALGORITHM_OPTIONS = ALGORITHMS.map(a => ({ value: a, label: a }));
 const DURATION_OPTIONS = DURATIONS.map(d => ({ value: d.value, label: d.label }));
+
+function compareVersions(a: string, b: string): number {
+  const pa = a.split('.').map(Number);
+  const pb = b.split('.').map(Number);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const diff = (pa[i] ?? 0) - (pb[i] ?? 0);
+    if (diff !== 0) return diff;
+  }
+  return 0;
+}
 
 interface SettingsProps {
   projects: Project[];
@@ -53,6 +64,23 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
   const [importError, setImportError] = useState('');
   // Clear data state
   const [confirmClear, setConfirmClear] = useState(false);
+  // Update check state
+  const [updateStatus, setUpdateStatus] = useState<'idle' | 'checking' | 'up-to-date' | 'available' | 'error'>('idle');
+  const [latestRelease, setLatestRelease] = useState<{ version: string; url: string } | null>(null);
+
+  async function handleCheckForUpdates() {
+    setUpdateStatus('checking');
+    setLatestRelease(null);
+    try {
+      const result = await window.electronAPI.checkForUpdates();
+      if (!result) { setUpdateStatus('error'); return; }
+      setLatestRelease(result);
+      const isNewer = compareVersions(result.version, __APP_VERSION__) > 0;
+      setUpdateStatus(isNewer ? 'available' : 'up-to-date');
+    } catch {
+      setUpdateStatus('error');
+    }
+  }
 
   async function handleExport() {
     setExportStatus('idle');
@@ -353,9 +381,65 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                       {projects.reduce((a, p) => a + p.tokens.length, 0)}
                     </span>
                   </div>
-
                 </div>
 
+                {/* Update checker */}
+                <div className="border-t border-[var(--alpha-05)] pt-4 flex flex-col gap-3">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-sm font-medium text-[var(--gray-800)]">Updates</p>
+                      <p className="text-xs text-[var(--gray-500)]">Check for a newer version on GitHub</p>
+                    </div>
+                    <Button
+                      color="secondary"
+                      variant="soft"
+                      size="sm"
+                      onClick={handleCheckForUpdates}
+                      disabled={updateStatus === 'checking'}
+                    >
+                      <ArrowRotateCw className="w-4 h-4" />
+                      {updateStatus === 'checking' ? 'Checking…' : 'Check for updates'}
+                    </Button>
+                  </div>
+
+                  {updateStatus === 'up-to-date' && (
+                    <Alert
+                      color="success"
+                      variant="soft"
+                      indicator={<CheckCircle className="w-4 h-4" />}
+                      description="You're on the latest version."
+                    />
+                  )}
+
+                  {updateStatus === 'available' && latestRelease && (
+                    <Alert
+                      color="info"
+                      variant="soft"
+                      indicator={<DownloadSimple className="w-4 h-4" />}
+                      title={`Version ${latestRelease.version} is available`}
+                      description="A new release is ready to download and install."
+                      actions={
+                        <Button
+                          color="primary"
+                          variant="solid"
+                          size="xs"
+                          onClick={() => window.electronAPI.openExternal(latestRelease.url)}
+                        >
+                          <DownloadSimple className="w-3.5 h-3.5" />
+                          Download update
+                        </Button>
+                      }
+                    />
+                  )}
+
+                  {updateStatus === 'error' && (
+                    <Alert
+                      color="danger"
+                      variant="soft"
+                      description="Could not check for updates. Please try again later."
+                    />
+                  )}
+                </div>
 
               </div>
             )}
