@@ -10,6 +10,6 @@ A local desktop app for generating and managing JWT tokens across multiple proje
 - **Flexible expiry** — choose token duration per project: 4 hours, 1 day, 1 month, or 3 months
 - **Copy to clipboard** — one-click copy of the generated JWT, with an optional auto-copy on generation setting
 - **Export / Import** — back up and restore all projects and tokens as a JSON file
-- **Persistent storage** — all data is saved locally in localStorage; nothing leaves your machine
+
 - **Settings** — configure default algorithm, default duration, deletion confirmation, and auto-copy behaviour
 - **Dark / light mode** — theme toggle included
