@@ -44,6 +44,7 @@ function App() {
     <div className="flex h-screen w-screen overflow-hidden bg-[var(--gray-0)] text-[var(--gray-900)]">
       <Sidebar
         store={store}
+        appSettings={appSettings}
         onNewProject={() => setShowNewProject(true)}
         onOpenSettings={() => setShowSettings(true)}
       />

@@ -186,7 +186,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                         <p className="text-sm text-[var(--gray-800)]">Default algorithm</p>
                         <p className="text-xs text-[var(--gray-500)]">Used when creating a new project</p>
                       </div>
-                      <div className="w-40 shrink-0">
+                      <div className="w-32 shrink-0">
                         <Select
                           options={ALGORITHM_OPTIONS}
                           value={settings.defaultAlgorithm}
@@ -202,10 +202,10 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                         <p className="text-sm text-[var(--gray-800)]">Default token duration</p>
                         <p className="text-xs text-[var(--gray-500)]">Expiry applied to new project tokens</p>
                       </div>
-                      <div className="w-40 shrink-0">
+                      <div className="w-32 shrink-0">
                         <Select
                           options={DURATION_OPTIONS}
-                          value={settings.defaultDuration}
+                          value={settings.defaultDuration || '1 day'}
                           onChange={opt => updateSettings({ defaultDuration: opt.value })}
                           size="sm"
                           variant="outline"

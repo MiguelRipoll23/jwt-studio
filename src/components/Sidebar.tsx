@@ -5,19 +5,20 @@ import {
   Moon,
   Sun,
   ApiKey,
+  ApiKeys,
   SettingsCog,
   SidebarCollapseLeft,
-  Sparkles,
 } from '@openai/apps-sdk-ui/components/Icon';
 import { getIcon } from './IconPicker';
 import type { ProjectStore } from '../store';
-import type { Project } from '../types';
+import type { Project, ThemeMode } from '../types';
+import type { AppSettingsStore } from '../appSettings';
 import { applyDocumentTheme, useDocumentTheme } from '@openai/apps-sdk-ui/theme';
-
-const THEME_KEY = 'jwt-studio-theme';
+import { THEME_KEY } from '../main';
 
 interface SidebarProps {
   store: ProjectStore;
+  appSettings: AppSettingsStore;
   onNewProject: () => void;
   onOpenSettings: () => void;
 }
@@ -52,17 +53,30 @@ function ProjectItem({
   );
 }
 
-export function Sidebar({ store, onNewProject, onOpenSettings }: SidebarProps) {
+export function Sidebar({ store, appSettings, onNewProject, onOpenSettings }: SidebarProps) {
   const theme = useDocumentTheme();
   const isDark = theme === 'dark';
+  const { settings, updateSettings } = appSettings;
+
+  function applyTheme(themeMode: ThemeMode) {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const newTheme = themeMode === 'system' ? (prefersDark ? 'dark' : 'light') : themeMode;
+    applyDocumentTheme(newTheme);
+    localStorage.setItem(THEME_KEY, themeMode);
+    if (window.electronAPI?.setTitleBarColor) {
+      window.electronAPI.setTitleBarColor(newTheme);
+    }
+  }
 
   function toggleTheme() {
-    const next = isDark ? 'light' : 'dark';
-    applyDocumentTheme(next);
-    localStorage.setItem(THEME_KEY, next);
-    if (window.electronAPI?.setTitleBarColor) {
-      window.electronAPI.setTitleBarColor(next);
-    }
+    // Cycle: system -> light -> dark -> system
+    const current = settings.themeMode;
+    let next: ThemeMode;
+    if (current === 'system') next = 'light';
+    else if (current === 'light') next = 'dark';
+    else next = 'system';
+    updateSettings({ themeMode: next });
+    applyTheme(next);
   }
 
   const [collapsed, setCollapsed] = useState(false);
@@ -70,7 +84,7 @@ export function Sidebar({ store, onNewProject, onOpenSettings }: SidebarProps) {
     <aside className={`flex flex-col h-full ${collapsed ? 'w-14' : 'w-60'} shrink-0 border-r border-[var(--alpha-08)] bg-[var(--gray-50)] transition-all duration-200 overflow-hidden`}>
       {/* Logo + Collapse Button */}
       <div className={`flex items-center border-b border-[var(--alpha-08)] px-3 py-3 ${collapsed ? 'justify-center' : 'justify-between px-4'}`}>
-        {!collapsed && <Sparkles className="w-5 h-5 text-[var(--gray-800)]" />}
+        {!collapsed && <ApiKeys className="w-5 h-5 text-[var(--gray-800)]" />}
         <Button
           color="secondary"
           variant="ghost"
