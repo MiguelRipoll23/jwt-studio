@@ -5,7 +5,7 @@ import { Alert } from '@openai/apps-sdk-ui/components/Alert';
 import { Badge } from '@openai/apps-sdk-ui/components/Badge';
 
 import {
-  SettingsCog,
+
   CheckCircle,
 
   Copy,
@@ -126,7 +126,7 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
             size="xs"
             onClick={() => setShowTokenEdit(true)}
           >
-            <Settings className="w-4 h-4" />
+            {/* settings icon intentionally removed, replace with correct icon if needed */}
           </Button>
           <Button
             color="danger"

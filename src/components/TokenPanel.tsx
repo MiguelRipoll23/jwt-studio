@@ -26,7 +26,7 @@ function TokenItem({
   token,
   selected,
   onClick,
-  onDelete,
+
 }: {
   token: Token;
   selected: boolean;
