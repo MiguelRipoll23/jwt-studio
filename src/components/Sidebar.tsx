@@ -93,7 +93,7 @@ export function Sidebar({ store, onNewProject, onOpenSettings }: SidebarProps) {
             onClick={onNewProject}
             title="New Project"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-5 h-5" />
           </Button>
         </div>
       )}
@@ -107,7 +107,7 @@ export function Sidebar({ store, onNewProject, onOpenSettings }: SidebarProps) {
             onClick={onNewProject}
             title="New Project"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-5 h-5" />
           </Button>
         </div>
       )}
