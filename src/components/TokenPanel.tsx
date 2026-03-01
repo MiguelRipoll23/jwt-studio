@@ -111,8 +111,12 @@ export function TokenPanel({ store }: TokenPanelProps) {
           </Badge>
           <Badge color="secondary" size="sm">{algorithmType}</Badge>
           <Badge color="secondary" size="sm">
-            <Clock className="w-4 h-4 mr-1" />
-            {selectedProject.duration === 'never' ? 'No expiry' : selectedProject.duration}
+            {selectedProject.duration === 'never' ? 'No expiry' :
+  selectedProject.duration
+    .replace(/(\d+)d\b/, '$1 day')
+    .replace(/(\d+)h\b/, '$1 hour')
+    .replace(/(\d+)m\b/, '$1 month')
+}
           </Badge>
         </div>
       </div>

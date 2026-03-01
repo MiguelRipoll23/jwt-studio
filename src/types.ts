@@ -20,7 +20,7 @@ export interface AppSettings {
 
 export const SETTINGS_DEFAULTS: AppSettings = {
   defaultAlgorithm: 'HS256',
-  defaultDuration: '1d',
+  defaultDuration: '1 day',
   confirmDelete: true,
   autoCopyToken: false,
 };
@@ -55,8 +55,8 @@ export const ALGORITHMS: Algorithm[] = [
 ];
 
 export const DURATIONS = [
-  { label: '4 hours', value: '4h' },
-  { label: '1 day', value: '1d' },
-  { label: '1 month', value: '1m' },
-  { label: '3 months', value: '3m' },
+  { label: '4 hours', value: '4 hours' },
+  { label: '1 day', value: '1 day' },
+  { label: '1 month', value: '1 month' },
+  { label: '3 months', value: '3 months' },
 ];
