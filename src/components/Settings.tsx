@@ -100,7 +100,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
             <span className="font-semibold text-[var(--gray-900)]">Settings</span>
           </div>
           <Button color="secondary" variant="ghost" size="xs" uniform onClick={onClose}>
-            <CloseBold className="w-4 h-4" />
+            <CloseBold className="w-5 h-5" />
           </Button>
         </div>
 

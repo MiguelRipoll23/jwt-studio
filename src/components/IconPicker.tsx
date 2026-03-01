@@ -54,7 +54,7 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
         placeholder="Search icons..."
         value={search}
         onChange={e => setSearch(e.target.value)}
-        startAdornment={<MagnifyingGlassSearch className="w-4 h-4 text-[var(--gray-500)]" />}
+        startAdornment={<MagnifyingGlassSearch className="w-5 h-5 text-[var(--gray-500)]" />}
         size="sm"
       />
       <div className="grid grid-cols-6 gap-2 max-h-48 overflow-y-auto p-1">
@@ -72,7 +72,7 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
               title={name}
               onClick={() => onChange(name)}
             >
-              <Icon className="w-6 h-6" />
+              <Icon className="w-5 h-5" />
             </Button>
           );
         })}

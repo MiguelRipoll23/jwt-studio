@@ -104,7 +104,7 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
   if (!selectedProject || !selectedToken || !selectedProjectId || !selectedTokenId) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-[var(--gray-400)] gap-3">
-        <Key className="w-10 h-10" />
+        <Key className="w-5 h-5" />
         <p className="text-sm text-[var(--gray-500)]">Select a token to view and edit</p>
       </div>
     );
@@ -120,7 +120,7 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
           <TokenIcon className="w-5 h-5 text-[var(--gray-600)]" />
           <h3 className="font-semibold text-[var(--gray-900)] mb-0.5">{selectedToken.name}</h3>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-3">
           <Button
             color="secondary"
             variant="ghost"
@@ -129,7 +129,7 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
             onClick={() => setShowTokenEdit(true)}
             title="Edit token"
           >
-            <EditPencil className="w-4 h-4" />
+            <EditPencil className="w-5 h-5" />
           </Button>
           <Button
             color="danger"
@@ -139,7 +139,7 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
             onClick={() => store.deleteToken(selectedProjectId, selectedTokenId)}
             title="Delete token"
           >
-            <Trash className="w-4 h-4" />
+            <Trash className="w-5 h-5" />
           </Button>
         </div>
       </div>
@@ -169,12 +169,12 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
             <label className="text-sm font-medium text-[var(--gray-700)]">Payload (JSON)</label>
             {payloadError ? (
               <Badge color="danger" size="sm">
-                <TriangleExclamationErrorWarning className="w-3 h-3 mr-1" />
+                <TriangleExclamationErrorWarning className="w-4 h-4 mr-1" />
                 Invalid JSON
               </Badge>
             ) : (
               <Badge color="success" size="sm">
-                <CheckCircle className="w-3 h-3 mr-1" />
+                <CheckCircle className="w-4 h-4 mr-1" />
                 Valid
               </Badge>
             )}
@@ -207,7 +207,7 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
       size="xs"
       onClick={handleCopy}
     >
-      <Copy className="w-3.5 h-3.5" />
+      <Copy className="w-5 h-5" />
       {copied ? 'Copied!' : 'Copy'}
     </Button>
   </div>

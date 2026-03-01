@@ -65,7 +65,7 @@ export function TokenPanel({ store }: TokenPanelProps) {
   if (!selectedProject || !selectedProjectId) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-[var(--gray-500)] gap-2">
-        <Folder className="w-8 h-8" />
+        <Folder className="w-5 h-5" />
         <p className="text-sm">Select a project</p>
       </div>
     );
@@ -82,7 +82,7 @@ export function TokenPanel({ store }: TokenPanelProps) {
       <div className="px-4 py-3 border-b border-[var(--alpha-08)]">
         <div className="flex items-start justify-between gap-2 mb-2">
           <h2 className="font-semibold text-[var(--gray-900)] truncate">{selectedProject.name}</h2>
-          <div className="flex items-center gap-1 shrink-0">
+          <div className="flex items-center gap-3 shrink-0">
             <Button
               color="secondary"
               variant="ghost"
@@ -91,7 +91,7 @@ export function TokenPanel({ store }: TokenPanelProps) {
               onClick={() => setShowProjectEdit(true)}
               title="Edit project"
             >
-              <EditPencil className="w-4 h-4" />
+              <EditPencil className="w-5 h-5" />
             </Button>
             <Button
               color="danger"
@@ -101,7 +101,7 @@ export function TokenPanel({ store }: TokenPanelProps) {
               onClick={() => setDeleteConfirm(true)}
               title="Delete project"
             >
-              <Trash className="w-4 h-4" />
+              <Trash className="w-5 h-5" />
             </Button>
           </div>
         </div>
@@ -111,7 +111,7 @@ export function TokenPanel({ store }: TokenPanelProps) {
           </Badge>
           <Badge color="secondary" size="sm">{algorithmType}</Badge>
           <Badge color="secondary" size="sm">
-            <Clock className="w-3 h-3 mr-1" />
+            <Clock className="w-4 h-4 mr-1" />
             {selectedProject.duration === 'never' ? 'No expiry' : selectedProject.duration}
           </Badge>
         </div>
@@ -171,12 +171,12 @@ export function TokenPanel({ store }: TokenPanelProps) {
             onClick={() => setShowTokenForm(true)}
             title="New Token"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-5 h-5" />
           </Button>
         </div>
         {selectedProject.tokens.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-[var(--gray-400)] gap-2">
-            <Key className="w-6 h-6" />
+            <Key className="w-5 h-5" />
             <p className="text-xs">No tokens yet</p>
           </div>
         ) : (
