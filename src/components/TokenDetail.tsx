@@ -5,11 +5,9 @@ import { Alert } from '@openai/apps-sdk-ui/components/Alert';
 import { Badge } from '@openai/apps-sdk-ui/components/Badge';
 
 import {
-  Edit,
   SettingsCog,
-  Settings,
   CheckCircle,
-  Regenerate,
+
   Copy,
   TriangleExclamationErrorWarning,
   Key,

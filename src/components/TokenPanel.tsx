@@ -7,7 +7,7 @@ import {
   Trash,
   Settings,
   Key,
-  Info,
+
   Clock,
   ApiKey,
   Folder,
