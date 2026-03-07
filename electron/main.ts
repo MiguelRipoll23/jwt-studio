@@ -23,8 +23,8 @@ function setTitleBarColor(theme: string) {
 function createWindow() {
   const isDark = nativeTheme.shouldUseDarkColors;
   mainWindow = new BrowserWindow({
-    width: 1280,
-    height: 800,
+    width: 1000,
+    height: 600,
     minWidth: 900,
     minHeight: 600,
     autoHideMenuBar: true,
