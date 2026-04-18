@@ -1,7 +1,8 @@
 {
   "name": "jwt-studio",
-  "private": true,
   "version": "1.4.0",
+  "description": "A studio for working with JSON Web Tokens",
+  "author": "JWT Studio Contributors",
   "type": "module",
   "main": "dist-electron/main.js",
   "scripts": {
@@ -28,9 +29,7 @@
     "win": {
       "target": "nsis"
     },
-    "nsis": {
-      "compression": "lzma"
-    },
+    "nsis": {},
     "mac": {
       "target": "dmg"
     },
