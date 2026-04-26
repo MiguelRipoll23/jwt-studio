@@ -1,38 +1,83 @@
-import * as Icons from '@openai/apps-sdk-ui/components/Icon';
+import {
+  KeyRound, Lock, Unlock, Shield, ShieldCheck, ShieldAlert, ShieldOff,
+  Code, Code2, Terminal, Bug, GitBranch, GitMerge, Braces, Hash,
+  File, FileCode, FileJson, FileText, Folder, FolderOpen, Archive, BookOpen,
+  Globe, Network, Link, Link2, Plug, Server, Database, Cloud,
+  User, Users, UserCheck, UserCog, Building2,
+  Bell, Mail, MessageSquare, Send, Inbox, MessageCircle,
+  BarChart2, Activity, TrendingUp, PieChart, DollarSign, Wallet, CreditCard, PiggyBank,
+  Copy, Download, Upload, Share2, RefreshCw, Trash2, Pencil, Plus,
+  CheckCircle, AlertTriangle, AlertCircle, Info, Star, Heart, Zap, Sparkles, Smile, ThumbsUp,
+  Clock, Calendar, Timer, History,
+  Settings, Settings2, Filter, Sliders,
+  Home, Search, Compass, Map, MapPin, Plane, Navigation,
+  Cpu, Layers, Package, Tag, Bookmark, Brain, Bot, FlaskConical, Wrench, Rocket,
+  Gamepad2, Dice1, Joystick, Music, Video, Camera, Image, ShoppingCart, ShoppingBag,
+  type LucideIcon,
+} from 'lucide-react';
 import { Button } from '@openai/apps-sdk-ui/components/Button';
 import { Input } from '@openai/apps-sdk-ui/components/Input';
-import { MagnifyingGlassSearch } from '@openai/apps-sdk-ui/components/Icon';
 import { useState, useMemo } from 'react';
 
-// Curated list of icons available from the SDK
-export const ICON_NAMES = [
-  'ApiKey', 'Archive', 'Agent', 'Analytics', 'AtSign',
-  'Bell', 'Bolt', 'Book', 'BookOpen', 'Brain', 'Branch', 'Bug',
-  'Calendar', 'Camera', 'Certificate', 'Chart', 'Chat', 'Check', 'CheckCircle', 'Clock', 'Code', 'Copy',
-  'Delete', 'Document', 'Download',
-  'Edit', 'EditPencil', 'Email', 'Eye',
-  'File', 'FileCode', 'FileDocument', 'Filter', 'Flask', 'Folder', 'Function',
-  'Globe', 'GraduationCap', 'Grid',
-  'Heart', 'Help', 'History', 'Home',
-  'Identity', 'Info',
-  'Key', 'Keyboard',
-  'Language', 'Link', 'Lock',
-  'Mail', 'Members', 'Menu', 'Mic',
-  'Nodes', 'Notebook',
-  'OpenaiLogoBold',
-  'Pencil', 'Phone', 'Plus', 'Plugin',
-  'Robot', 'RobotHead',
-  'Search', 'Settings', 'Share', 'ShieldKey', 'ShieldLock', 'Star', 'Storage',
-  'Tag', 'Tasks', 'Terminal', 'Trash',
-  'User', 'Users',
-  'Warning',
-  'Workspace',
-] as const;
+const ICON_MAP = {
+  // Keys & Security
+  KeyRound, Lock, Unlock, Shield, ShieldCheck, ShieldAlert, ShieldOff,
+  // Code & Development
+  Code, Code2, Terminal, Bug, GitBranch, GitMerge, Braces, Hash,
+  // Files & Documents
+  File, FileCode, FileJson, FileText, Folder, FolderOpen, Archive, BookOpen,
+  // Network & API
+  Globe, Network, Link, Link2, Plug, Server, Database, Cloud,
+  // Users & Identity
+  User, Users, UserCheck, UserCog, Building2,
+  // Communication & Email
+  Bell, Mail, MessageSquare, Send, Inbox, MessageCircle,
+  // Finance & Money
+  DollarSign, Wallet, CreditCard, PiggyBank, BarChart2, TrendingUp, PieChart, Activity,
+  // Games & Entertainment
+  Gamepad2, Dice1, Joystick, Music, Video, Camera, Image,
+  // Shopping
+  ShoppingCart, ShoppingBag,
+  // Social & Sharing
+  Heart, Smile, ThumbsUp, Share2,
+  // Actions
+  Copy, Download, Upload, RefreshCw, Trash2, Pencil, Plus,
+  // Status & Indicators
+  CheckCircle, AlertTriangle, AlertCircle, Info, Star, Zap, Sparkles,
+  // Time
+  Clock, Calendar, Timer, History,
+  // Settings & Config
+  Settings, Settings2, Filter, Sliders,
+  // Navigation & Travel
+  Home, Search, Compass, Map, MapPin, Plane, Navigation,
+  // Tech & Creative
+  Cpu, Layers, Package, Tag, Bookmark, Brain, Bot, FlaskConical, Wrench, Rocket,
+} as const;
 
-export type IconName = (typeof ICON_NAMES)[number];
+export type IconName = keyof typeof ICON_MAP;
+export const ICON_NAMES = Object.keys(ICON_MAP) as IconName[];
 
-export function getIcon(name: string): React.ComponentType<React.SVGProps<SVGSVGElement>> | null {
-  return (Icons as Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>>)[name] ?? null;
+const ICON_CATEGORIES = {
+  'Keys & Security': ['KeyRound', 'Lock', 'Unlock', 'Shield', 'ShieldCheck', 'ShieldAlert', 'ShieldOff'],
+  'Code & Development': ['Code', 'Code2', 'Terminal', 'Bug', 'GitBranch', 'GitMerge', 'Braces', 'Hash'],
+  'Files & Documents': ['File', 'FileCode', 'FileJson', 'FileText', 'Folder', 'FolderOpen', 'Archive', 'BookOpen'],
+  'Network & API': ['Globe', 'Network', 'Link', 'Link2', 'Plug', 'Server', 'Database', 'Cloud'],
+  'Users & Identity': ['User', 'Users', 'UserCheck', 'UserCog', 'Building2'],
+  'Communication & Email': ['Bell', 'Mail', 'MessageSquare', 'Send', 'Inbox', 'MessageCircle'],
+  'Finance & Money': ['DollarSign', 'Wallet', 'CreditCard', 'PiggyBank', 'BarChart2', 'TrendingUp', 'PieChart', 'Activity'],
+  'Games & Entertainment': ['Gamepad2', 'Dice1', 'Joystick', 'Music', 'Video', 'Camera', 'Image'],
+  'Shopping': ['ShoppingCart', 'ShoppingBag'],
+  'Social & Sharing': ['Heart', 'Smile', 'ThumbsUp', 'Share2'],
+  'Actions': ['Copy', 'Download', 'Upload', 'RefreshCw', 'Trash2', 'Pencil', 'Plus'],
+  'Status & Indicators': ['CheckCircle', 'AlertTriangle', 'AlertCircle', 'Info', 'Star', 'Zap', 'Sparkles'],
+  'Time': ['Clock', 'Calendar', 'Timer', 'History'],
+  'Navigation & Travel': ['Home', 'Search', 'Compass', 'Map', 'MapPin', 'Plane', 'Navigation'],
+  'Tech & Creative': ['Cpu', 'Layers', 'Package', 'Tag', 'Bookmark', 'Brain', 'Bot', 'FlaskConical', 'Wrench', 'Rocket'],
+  'Settings & Config': ['Settings', 'Settings2', 'Filter', 'Sliders'],
+};
+
+export function getIcon(name: string): LucideIcon | null {
+  return (ICON_MAP as Record<string, LucideIcon>)[name] ?? null;
 }
 
 interface IconPickerProps {
@@ -43,39 +88,56 @@ interface IconPickerProps {
 export function IconPicker({ value, onChange }: IconPickerProps) {
   const [search, setSearch] = useState('');
 
-  const filtered = useMemo(() =>
-    ICON_NAMES.filter(n => n.toLowerCase().includes(search.toLowerCase())),
-    [search]
-  );
+  const filteredCategories = useMemo(() => {
+    if (!search) return ICON_CATEGORIES;
+
+    const filtered: typeof ICON_CATEGORIES = {};
+    const searchLower = search.toLowerCase();
+
+    for (const [category, icons] of Object.entries(ICON_CATEGORIES)) {
+      const filteredIcons = icons.filter(n => n.toLowerCase().includes(searchLower));
+      if (filteredIcons.length > 0) {
+        filtered[category] = filteredIcons;
+      }
+    }
+    return filtered;
+  }, [search]);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 w-full">
       <Input
         placeholder="Search icons..."
         value={search}
         onChange={e => setSearch(e.target.value)}
-        startAdornment={<MagnifyingGlassSearch className="w-5 h-5 text-[var(--gray-500)]" />}
+        startAdornment={<Search className="w-4 h-4 text-[var(--gray-500)]" />}
         size="sm"
       />
-      <div className="grid grid-cols-6 gap-2 max-h-48 overflow-y-auto p-1">
-        {filtered.map(name => {
-          const Icon = getIcon(name);
-          if (!Icon) return null;
-          return (
-            <Button
-              key={name}
-              color="secondary"
-              variant={value === name ? 'solid' : 'ghost'}
-              size="sm"
-              uniform
-              className="px-4 py-4"
-              title={name}
-              onClick={() => onChange(name)}
-            >
-              <Icon className="w-5 h-5" />
-            </Button>
-          );
-        })}
+      <div className="max-h-40 overflow-y-auto space-y-2 w-full -mx-2 px-2">
+        {Object.entries(filteredCategories).map(([category, icons]) => (
+          <div key={category}>
+            <h4 className="text-xs font-semibold text-[var(--gray-600)] mb-1 px-1">{category}</h4>
+            <div className="grid gap-0.5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(2rem, 1fr))' }}>
+              {icons.map(name => {
+                const Icon = getIcon(name);
+                if (!Icon) return null;
+                return (
+                  <Button
+                    key={name}
+                    color="secondary"
+                    variant={value === name ? 'solid' : 'ghost'}
+                    size="sm"
+                    uniform
+                    className="px-0.5 py-0.5"
+                    title={name}
+                    onClick={() => onChange(name)}
+                  >
+                    <Icon className="w-5 h-5" />
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

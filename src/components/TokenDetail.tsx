@@ -4,16 +4,7 @@ import { Textarea } from '@openai/apps-sdk-ui/components/Textarea';
 import { Alert } from '@openai/apps-sdk-ui/components/Alert';
 import { Badge } from '@openai/apps-sdk-ui/components/Badge';
 
-import {
-
-  CheckCircle,
-
-  Copy,
-  TriangleExclamationErrorWarning,
-  Key,
-  Trash,
-  EditPencil,
-} from '@openai/apps-sdk-ui/components/Icon';
+import { CheckCircle, Copy, AlertTriangle, KeyRound, Trash2, Pencil } from 'lucide-react';
 import { getIcon } from './IconPicker';
 import type { ProjectStore } from '../store';
 import type { AppSettingsStore } from '../appSettings';
@@ -104,13 +95,13 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
   if (!selectedProject || !selectedToken || !selectedProjectId || !selectedTokenId) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-[var(--gray-400)] gap-3">
-        <Key className="w-5 h-5" />
+        <KeyRound className="w-5 h-5" />
         <p className="text-sm text-[var(--gray-500)]">Select a token to view and edit</p>
       </div>
     );
   }
 
-  const TokenIcon = getIcon(selectedToken.icon) ?? Key;
+  const TokenIcon = getIcon(selectedToken.icon) ?? KeyRound;
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
@@ -129,7 +120,7 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
             onClick={() => setShowTokenEdit(true)}
             title="Edit token"
           >
-            <EditPencil className="w-5 h-5" />
+            <Pencil className="w-5 h-5" />
           </Button>
           <Button
             color="danger"
@@ -139,7 +130,7 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
             onClick={() => store.deleteToken(selectedProjectId, selectedTokenId)}
             title="Delete token"
           >
-            <Trash className="w-5 h-5" />
+            <Trash2 className="w-5 h-5" />
           </Button>
         </div>
       </div>
@@ -169,7 +160,7 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
             <label className="text-sm font-medium text-[var(--gray-700)]">Payload (JSON)</label>
             {payloadError ? (
               <Badge color="danger" size="sm">
-                <TriangleExclamationErrorWarning className="w-4 h-4 mr-1" />
+                <AlertTriangle className="w-4 h-4 mr-1" />
                 Invalid JSON
               </Badge>
             ) : (

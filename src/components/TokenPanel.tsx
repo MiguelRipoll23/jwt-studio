@@ -2,14 +2,7 @@ import { useState } from 'react';
 import { Button } from '@openai/apps-sdk-ui/components/Button';
 import { Badge } from '@openai/apps-sdk-ui/components/Badge';
 import { Alert } from '@openai/apps-sdk-ui/components/Alert';
-import {
-  Plus,
-  Trash,
-  EditPencil,
-  Key,
-  ApiKey,
-  Folder,
-} from '@openai/apps-sdk-ui/components/Icon';
+import { Plus, Trash2, Pencil, KeyRound, Folder } from 'lucide-react';
 import { getIcon } from './IconPicker';
 import type { ProjectStore } from '../store';
 import type { Token } from '../types';
@@ -31,7 +24,7 @@ function TokenItem({
   onClick: () => void;
   onDelete: () => void;
 }) {
-  const Icon = getIcon(token.icon) ?? ApiKey;
+  const Icon = getIcon(token.icon) ?? KeyRound;
   return (
     <div
       className={[
@@ -89,7 +82,7 @@ export function TokenPanel({ store }: TokenPanelProps) {
               onClick={() => setShowProjectEdit(true)}
               title="Edit project"
             >
-              <EditPencil className="w-5 h-5" />
+              <Pencil className="w-5 h-5" />
             </Button>
             <Button
               color="danger"
@@ -99,7 +92,7 @@ export function TokenPanel({ store }: TokenPanelProps) {
               onClick={() => setDeleteConfirm(true)}
               title="Delete project"
             >
-              <Trash className="w-5 h-5" />
+              <Trash2 className="w-5 h-5" />
             </Button>
           </div>
         </div>
@@ -178,7 +171,7 @@ export function TokenPanel({ store }: TokenPanelProps) {
         </div>
         {selectedProject.tokens.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-[var(--gray-400)] gap-2">
-            <Key className="w-5 h-5" />
+            <KeyRound className="w-5 h-5" />
             <p className="text-xs">No tokens yet</p>
           </div>
         ) : (

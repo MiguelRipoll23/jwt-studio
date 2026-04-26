@@ -4,7 +4,7 @@ import { Input } from '@openai/apps-sdk-ui/components/Input';
 import { Select } from '@openai/apps-sdk-ui/components/Select';
 import { Textarea } from '@openai/apps-sdk-ui/components/Textarea';
 import { Alert } from '@openai/apps-sdk-ui/components/Alert';
-import { Eye, EyeClosed } from '@openai/apps-sdk-ui/components/Icon';
+import { Eye, EyeOff } from 'lucide-react';
 import { IconPicker } from './IconPicker';
 import type { Project, Algorithm } from '../types';
 import { ALGORITHMS, DURATIONS, isHmacAlgorithm } from '../types';
@@ -22,7 +22,7 @@ const DURATION_OPTIONS = DURATIONS.map(d => ({ value: d.value, label: d.label })
 
 export function ProjectForm({ initial, onSubmit, onCancel, defaultAlgorithm = 'HS256', defaultDuration = '1d' }: ProjectFormProps) {
   const [name, setName] = useState(initial?.name ?? '');
-  const [icon, setIcon] = useState(initial?.icon ?? 'ApiKey');
+  const [icon, setIcon] = useState(initial?.icon ?? 'KeyRound');
   const [algorithm, setAlgorithm] = useState<Algorithm>(initial?.algorithm ?? defaultAlgorithm);
   const [secret, setSecret] = useState(
     typeof initial?.secret === 'string' ? initial.secret : ''
@@ -114,7 +114,7 @@ export function ProjectForm({ initial, onSubmit, onCancel, defaultAlgorithm = 'H
             onChange={e => setSecret(e.target.value)}
             endAdornment={
               <button type="button" onClick={() => setShowSecret(v => !v)} className="flex items-center text-[var(--gray-500)] hover:text-[var(--gray-700)]">
-                {showSecret ? <EyeClosed className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showSecret ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             }
           />

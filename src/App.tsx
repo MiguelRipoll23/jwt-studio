@@ -28,7 +28,7 @@ function App() {
   const [updateInfo, setUpdateInfo] = useState<{ version: string; url: string } | null>(null);
 
   useEffect(() => {
-    window.electronAPI.checkForUpdates().then((result) => {
+    window.electronAPI?.checkForUpdates().then((result) => {
       if (result && compareVersions(result.version, __APP_VERSION__) > 0) {
         setUpdateInfo(result);
       }
