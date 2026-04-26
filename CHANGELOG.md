@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.5.1 - 2026-04-26
+
+## What's Changed
+* Fix merge conflicts: keep SDK icons, restore publish workflow by @MiguelRipoll23 in https://github.com/MiguelRipoll23/jwt-studio/pull/5
+* Bump version to v1.5.1 by @github-actions[bot] in https://github.com/MiguelRipoll23/jwt-studio/pull/6
+
+
+**Full Changelog**: https://github.com/MiguelRipoll23/jwt-studio/compare/v1.5.0...v1.5.1
+
+
 ## v1.5.0 - 2026-04-26
 
 ## What's Changed
