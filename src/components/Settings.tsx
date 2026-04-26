@@ -5,22 +5,7 @@ import { Badge } from '@openai/apps-sdk-ui/components/Badge';
 import { Select } from '@openai/apps-sdk-ui/components/Select';
 import { Switch } from '@openai/apps-sdk-ui/components/Switch';
 import { applyDocumentTheme } from '@openai/apps-sdk-ui/theme';
-import {
-  DownloadSimple,
-  UploadDocuments,
-  CheckCircle,
-  SettingsCog,
-  CloseBold,
-
-
-  ShieldLock,
-
-  Sparkles,
-  Nodes,
-  Trash,
-  Info,
-  ArrowRotateCw,
-} from '@openai/apps-sdk-ui/components/Icon';
+import { Download, Upload, CheckCircle, Settings, X, ShieldCheck, Sparkles, Network, Trash2, Info, RefreshCw } from 'lucide-react';
 import type { Project, ThemeMode } from '../types';
 import { ALGORITHMS, DURATIONS } from '../types';
 import type { AppSettingsStore } from '../appSettings';
@@ -29,9 +14,9 @@ import { THEME_KEY } from '../main';
 type Section = 'general' | 'appearance' | 'export-import' | 'about';
 
 const NAV: { id: Section; label: string; Icon: React.ComponentType<React.SVGProps<SVGSVGElement>> }[] = [
-  { id: 'general', label: 'General', Icon: SettingsCog },
-  { id: 'appearance', label: 'Appearance', Icon: SettingsCog },
-  { id: 'export-import', label: 'Export / Import', Icon: Nodes },
+  { id: 'general', label: 'General', Icon: Settings },
+  { id: 'appearance', label: 'Appearance', Icon: Settings },
+  { id: 'export-import', label: 'Export / Import', Icon: Network },
   { id: 'about', label: 'About', Icon: Info },
 ];
 
@@ -57,6 +42,11 @@ interface SettingsProps {
 
 export function Settings({ projects, onImport, onClose, appSettings }: SettingsProps) {
   const [section, setSection] = useState<Section>('general');
+
+  if (!appSettings) {
+    return null;
+  }
+
   const { settings, updateSettings } = appSettings;
 
   function applyTheme(themeMode: ThemeMode) {
@@ -64,9 +54,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
     const theme = themeMode === 'system' ? (prefersDark ? 'dark' : 'light') : themeMode;
     applyDocumentTheme(theme);
     localStorage.setItem(THEME_KEY, themeMode);
-    if (window.electronAPI?.setTitleBarColor) {
-      window.electronAPI.setTitleBarColor(theme);
-    }
+    window.electronAPI?.setTitleBarColor(theme);
   }
 
   function handleThemeChange(themeMode: ThemeMode) {
@@ -90,7 +78,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
     setUpdateStatus('checking');
     setLatestRelease(null);
     try {
-      const result = await window.electronAPI.checkForUpdates();
+      const result = await window.electronAPI?.checkForUpdates();
       if (!result) { setUpdateStatus('error'); return; }
       setLatestRelease(result);
       const isNewer = compareVersions(result.version, __APP_VERSION__) > 0;
@@ -104,7 +92,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
     setExportStatus('idle');
     const data = JSON.stringify({ version: __APP_VERSION__, projects }, null, 2);
     try {
-      const saved = await window.electronAPI.saveConfig(data);
+      const saved = await window.electronAPI?.saveConfig(data);
       setExportStatus(saved ? 'success' : 'idle');
     } catch {
       setExportStatus('error');
@@ -115,7 +103,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
     setImportStatus('idle');
     setImportError('');
     try {
-      const raw = await window.electronAPI.openConfig();
+      const raw = await window.electronAPI?.openConfig();
       if (!raw) return;
       const parsed = JSON.parse(raw) as { version?: string; projects: Project[] };
       if (!Array.isArray(parsed.projects)) throw new Error('Invalid config: missing projects array');
@@ -142,11 +130,11 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-[var(--alpha-08)] shrink-0">
           <div className="flex items-center gap-2.5">
-            <SettingsCog className="w-5 h-5 text-[var(--gray-600)]" />
+            <Settings className="w-5 h-5 text-[var(--gray-600)]" />
             <span className="font-semibold text-[var(--gray-900)]">Settings</span>
           </div>
           <Button color="secondary" variant="ghost" size="xs" uniform onClick={onClose}>
-            <CloseBold className="w-5 h-5" />
+            <X className="w-5 h-5" />
           </Button>
         </div>
 
@@ -251,7 +239,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                       size="sm"
                       onClick={() => setConfirmClear(true)}
                     >
-                      <Trash className="w-4 h-4" />
+                      <Trash2 className="w-4 h-4" />
                       Clear all data
                     </Button>
                   ) : (
@@ -324,7 +312,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                       onClick={handleExport}
                       disabled={projects.length === 0}
                     >
-                      <DownloadSimple className="w-4 h-4" />
+                      <Download className="w-4 h-4" />
                       Export
                     </Button>
                   </div>
@@ -358,7 +346,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                       size="sm"
                       onClick={handleImportPick}
                     >
-                      <UploadDocuments className="w-4 h-4" />
+                      <Upload className="w-4 h-4" />
                       Import
                     </Button>
                   </div>
@@ -377,7 +365,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                     <Alert
                       color="info"
                       variant="soft"
-                      indicator={<ShieldLock className="w-4 h-4" />}
+                      indicator={<ShieldCheck className="w-4 h-4" />}
                       title={`Import ${importPreview.length} project${importPreview.length !== 1 ? 's' : ''}?`}
                       description="All current projects and tokens will be replaced."
                       actions={
@@ -443,7 +431,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                       onClick={handleCheckForUpdates}
                       disabled={updateStatus === 'checking'}
                     >
-                      <ArrowRotateCw className="w-4 h-4" />
+                      <RefreshCw className="w-4 h-4" />
                       {updateStatus === 'checking' ? 'Checking…' : 'Check for updates'}
                     </Button>
                   </div>
@@ -461,7 +449,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                     <Alert
                       color="info"
                       variant="soft"
-                      indicator={<DownloadSimple className="w-4 h-4" />}
+                      indicator={<Download className="w-4 h-4" />}
                       title={`Version ${latestRelease.version} is available`}
                       description="A new release is ready to download and install."
                       actions={
@@ -469,9 +457,9 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                           color="primary"
                           variant="solid"
                           size="xs"
-                          onClick={() => window.electronAPI.openExternal(latestRelease.url)}
+                          onClick={() => window.electronAPI?.openExternal(latestRelease.url)}
                         >
-                          <DownloadSimple className="w-3.5 h-3.5" />
+                          <Download className="w-3.5 h-3.5" />
                           Download update
                         </Button>
                       }

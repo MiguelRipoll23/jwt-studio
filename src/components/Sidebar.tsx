@@ -1,14 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@openai/apps-sdk-ui/components/Button';
-import {
-  Plus,
-  Moon,
-  Sun,
-  ApiKey,
-  ApiKeys,
-  SettingsCog,
-  SidebarCollapseLeft,
-} from '@openai/apps-sdk-ui/components/Icon';
+import { Plus, Moon, Sun, KeyRound, Settings, PanelLeftClose } from 'lucide-react';
 import { getIcon } from './IconPicker';
 import type { ProjectStore } from '../store';
 import type { Project, ThemeMode } from '../types';
@@ -34,7 +26,7 @@ function ProjectItem({
   onClick: () => void;
   collapsed: boolean;
 }) {
-  const Icon = getIcon(project.icon) ?? ApiKey;
+  const Icon = getIcon(project.icon) ?? KeyRound;
   return (
     <button
       onClick={onClick}
@@ -63,9 +55,7 @@ export function Sidebar({ store, appSettings, onNewProject, onOpenSettings }: Si
     const newTheme = themeMode === 'system' ? (prefersDark ? 'dark' : 'light') : themeMode;
     applyDocumentTheme(newTheme);
     localStorage.setItem(THEME_KEY, themeMode);
-    if (window.electronAPI?.setTitleBarColor) {
-      window.electronAPI.setTitleBarColor(newTheme);
-    }
+    window.electronAPI?.setTitleBarColor(newTheme);
   }
 
   function toggleTheme() {
@@ -84,7 +74,7 @@ export function Sidebar({ store, appSettings, onNewProject, onOpenSettings }: Si
     <aside className={`flex flex-col h-full ${collapsed ? 'w-14' : 'w-60'} shrink-0 border-r border-[var(--alpha-08)] bg-[var(--gray-50)] transition-all duration-200 overflow-hidden`}>
       {/* Logo + Collapse Button */}
       <div className={`flex items-center border-b border-[var(--alpha-08)] px-3 py-3 ${collapsed ? 'justify-center' : 'justify-between px-4'}`}>
-        {!collapsed && <ApiKeys className="w-5 h-5 text-[var(--gray-800)]" />}
+        {!collapsed && <KeyRound className="w-5 h-5 text-[var(--gray-800)]" />}
         <Button
           color="secondary"
           variant="ghost"
@@ -93,7 +83,7 @@ export function Sidebar({ store, appSettings, onNewProject, onOpenSettings }: Si
           onClick={() => setCollapsed(c => !c)}
           title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
-          <SidebarCollapseLeft className="w-5 h-5 transition-transform duration-200" style={{ transform: collapsed ? 'rotate(180deg)' : undefined }} />
+          <PanelLeftClose className="w-5 h-5 transition-transform duration-200" style={{ transform: collapsed ? 'rotate(180deg)' : undefined }} />
         </Button>
       </div>
       {/* Header */}
@@ -165,7 +155,7 @@ export function Sidebar({ store, appSettings, onNewProject, onOpenSettings }: Si
             onClick={onOpenSettings}
             title="Settings"
           >
-            <SettingsCog className="w-5 h-5" />
+            <Settings className="w-5 h-5" />
           </Button>
         </div>
       </div>

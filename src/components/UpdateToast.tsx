@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { DownloadSimple, CloseBold } from '@openai/apps-sdk-ui/components/Icon';
+import { Download, X } from 'lucide-react';
 
 interface UpdateToastProps {
   version: string;
@@ -18,10 +18,10 @@ export function UpdateToast({ version, url }: UpdateToastProps) {
         <p className="text-xs text-[var(--gray-500)] mt-0.5">A new version of JWT Studio is ready.</p>
       </div>
       <button
-        onClick={() => window.electronAPI.openExternal(url)}
+        onClick={() => window.electronAPI?.openExternal(url)}
         className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium bg-[var(--gray-900)] text-[var(--gray-0)] hover:opacity-80 transition-opacity"
       >
-        <DownloadSimple className="w-3.5 h-3.5" />
+        <Download className="w-3.5 h-3.5" />
         Download
       </button>
       <button
@@ -29,7 +29,7 @@ export function UpdateToast({ version, url }: UpdateToastProps) {
         className="shrink-0 p-1 rounded-lg text-[var(--gray-500)] hover:bg-[var(--alpha-05)] hover:text-[var(--gray-900)] transition-colors"
         aria-label="Dismiss"
       >
-        <CloseBold className="w-4 h-4" />
+        <X className="w-4 h-4" />
       </button>
     </div>
   );

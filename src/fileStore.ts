@@ -13,7 +13,7 @@ export function loadConfig(): Promise<Config> {
   if (!_loadPromise) {
     _loadPromise = (async () => {
       try {
-        const raw = await window.electronAPI.readStore();
+        const raw = await window.electronAPI?.readStore();
         if (raw) {
           const parsed = JSON.parse(raw);
           _config = {
@@ -29,7 +29,7 @@ export function loadConfig(): Promise<Config> {
 }
 
 async function persist(): Promise<void> {
-  await window.electronAPI.writeStore(JSON.stringify(_config, null, 2));
+  await window.electronAPI?.writeStore(JSON.stringify(_config, null, 2));
 }
 
 export async function saveProjects(projects: Project[]): Promise<void> {
