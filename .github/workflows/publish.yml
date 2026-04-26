@@ -91,9 +91,9 @@ jobs:
       - name: Upload artifacts
         shell: bash
         run: |
-          files=$(find release -maxdepth 2 \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" \) | tr '\n' ' ')
-          if [ -n "$files" ]; then
-            gh release upload "$TAG_NAME" $files --clobber
+          mapfile -t files < <(find release -maxdepth 2 \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" \))
+          if [ ${#files[@]} -gt 0 ]; then
+            gh release upload "$TAG_NAME" "${files[@]}" --clobber
           fi
         env:
           GH_TOKEN: ${{ github.token }}
