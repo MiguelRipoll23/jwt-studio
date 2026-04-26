@@ -91,7 +91,7 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
   const filteredCategories = useMemo(() => {
     if (!search) return ICON_CATEGORIES;
 
-    const filtered: typeof ICON_CATEGORIES = {};
+    const filtered: Record<string, string[]> = {};
     const searchLower = search.toLowerCase();
 
     for (const [category, icons] of Object.entries(ICON_CATEGORIES)) {

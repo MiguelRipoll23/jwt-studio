@@ -1,37 +1,17 @@
-name: Build & Release
-
-concurrency:
-  group: build-and-release-${{ github.ref }}
-  cancel-in-progress: true
+name: CI
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
-      - beta
-      - alpha
-
-permissions:
-  contents: write
 
 jobs:
   build:
-    name: Build (${{ matrix.os }})
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: windows-latest
-            platform: win
-            artifact: release/jwt-studio-*.exe
-          - os: macos-latest
-            platform: mac
-            artifact: release/jwt-studio-*.dmg
-          - os: ubuntu-latest
-            platform: linux
-            artifact: release/jwt-studio-*.AppImage
-
-    runs-on: ${{ matrix.os }}
+    name: Type check & build
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
@@ -46,86 +26,5 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Electron app
-        run: npm run electron:build
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: jwt-studio-${{ matrix.platform }}-${{ github.sha }}
-          path: release/
-          if-no-files-found: warn
-          retention-days: 30
-
-  release:
-    name: Create Release
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref_name == 'main' || github.ref_name == 'beta'
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Read version from package.json
-        id: pkg
-        run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
-
-      - name: Compute release tag
-        id: tag
-        run: |
-          if [ "${{ github.ref_name }}" = "main" ]; then
-            echo "tag=v${{ steps.pkg.outputs.version }}" >> "$GITHUB_OUTPUT"
-            echo "prerelease=false" >> "$GITHUB_OUTPUT"
-            echo "name=v${{ steps.pkg.outputs.version }}" >> "$GITHUB_OUTPUT"
-          else
-            echo "tag=v${{ steps.pkg.outputs.version }}-beta.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
-            echo "prerelease=true" >> "$GITHUB_OUTPUT"
-            echo "name=v${{ steps.pkg.outputs.version }}-beta.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: release-artifacts
-          pattern: jwt-studio-*-${{ github.sha }}
-          merge-multiple: true
-
-      - name: Debug artifact structure
-        run: |
-          echo "=== Checking release-artifacts directory ==="
-          ls -laR release-artifacts/ || echo "Directory empty or not found"
-
-      - name: Create GitHub Release and Upload Assets
-        run: |
-          PRERELEASE_FLAG=""
-          if [ "${{ steps.tag.outputs.prerelease }}" = "true" ]; then
-            PRERELEASE_FLAG="--prerelease"
-          fi
-          
-          # Collect all release assets recursively
-          ASSETS=()
-          while IFS= read -r -d '' file; do
-            ASSETS+=("$file")
-            echo "Found asset: $file"
-          done < <(find release-artifacts -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" \) -print0 2>/dev/null)
-          
-          # Create release with assets
-          if [ ${#ASSETS[@]} -gt 0 ]; then
-            echo "Creating release with ${#ASSETS[@]} asset(s)..."
-            gh release create "${{ steps.tag.outputs.tag }}" \
-              --title "${{ steps.tag.outputs.name }}" \
-              --generate-notes \
-              $PRERELEASE_FLAG \
-              "${ASSETS[@]}"
-          else
-            echo "No release assets found, creating release without assets..."
-            gh release create "${{ steps.tag.outputs.tag }}" \
-              --title "${{ steps.tag.outputs.name }}" \
-              --generate-notes \
-              $PRERELEASE_FLAG
-          fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build
+        run: npm run build
