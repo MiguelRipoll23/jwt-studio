@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.5.3 - 2026-04-26
+
+## What's Changed
+* fix: handle spaces in artifact filenames when uploading to release by @MiguelRipoll23 in https://github.com/MiguelRipoll23/jwt-studio/pull/9
+* Bump version to v1.5.3 by @github-actions[bot] in https://github.com/MiguelRipoll23/jwt-studio/pull/10
+
+
+**Full Changelog**: https://github.com/MiguelRipoll23/jwt-studio/compare/v1.5.2...v1.5.3
+
+
 ## v1.5.2 - 2026-04-26
 
 ## What's Changed
