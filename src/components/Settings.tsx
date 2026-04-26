@@ -5,7 +5,7 @@ import { Badge } from '@openai/apps-sdk-ui/components/Badge';
 import { Select } from '@openai/apps-sdk-ui/components/Select';
 import { Switch } from '@openai/apps-sdk-ui/components/Switch';
 import { applyDocumentTheme } from '@openai/apps-sdk-ui/theme';
-import { Download, Upload, CheckCircle, Settings, X, ShieldCheck, Sparkles, Network, Trash2, Info, RefreshCw } from 'lucide-react';
+import { Download, Upload, CheckCircle, Settings as SettingsIcon, X, ShieldCheck, Sparkles, Network, Trash2, Info, RefreshCw } from 'lucide-react';
 import type { Project, ThemeMode } from '../types';
 import { ALGORITHMS, DURATIONS } from '../types';
 import type { AppSettingsStore } from '../appSettings';
@@ -14,8 +14,8 @@ import { THEME_KEY } from '../main';
 type Section = 'general' | 'appearance' | 'export-import' | 'about';
 
 const NAV: { id: Section; label: string; Icon: React.ComponentType<React.SVGProps<SVGSVGElement>> }[] = [
-  { id: 'general', label: 'General', Icon: Settings },
-  { id: 'appearance', label: 'Appearance', Icon: Settings },
+  { id: 'general', label: 'General', Icon: SettingsIcon },
+  { id: 'appearance', label: 'Appearance', Icon: SettingsIcon },
   { id: 'export-import', label: 'Export / Import', Icon: Network },
   { id: 'about', label: 'About', Icon: Info },
 ];
@@ -130,7 +130,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-[var(--alpha-08)] shrink-0">
           <div className="flex items-center gap-2.5">
-            <Settings className="w-5 h-5 text-[var(--gray-600)]" />
+            <SettingsIcon className="w-5 h-5 text-[var(--gray-600)]" />
             <span className="font-semibold text-[var(--gray-900)]">Settings</span>
           </div>
           <Button color="secondary" variant="ghost" size="xs" uniform onClick={onClose}>
