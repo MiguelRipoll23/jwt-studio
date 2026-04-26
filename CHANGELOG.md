@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.5.2 - 2026-04-26
+
+## What's Changed
+* fix: build and upload Electron artifacts in publish workflow by @MiguelRipoll23 in https://github.com/MiguelRipoll23/jwt-studio/pull/7
+* Bump version to v1.5.2 by @github-actions[bot] in https://github.com/MiguelRipoll23/jwt-studio/pull/8
+
+
+**Full Changelog**: https://github.com/MiguelRipoll23/jwt-studio/compare/v1.5.1...v1.5.2
+
+
 ## v1.5.1 - 2026-04-26
 
 ## What's Changed
