@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.5.4 - 2026-04-26
+
+## What's Changed
+* fix: replace mapfile with bash 3.2-compatible loop in publish workflow by @MiguelRipoll23 in https://github.com/MiguelRipoll23/jwt-studio/pull/11
+* Bump version to v1.5.4 by @github-actions[bot] in https://github.com/MiguelRipoll23/jwt-studio/pull/12
+
+
+**Full Changelog**: https://github.com/MiguelRipoll23/jwt-studio/compare/v1.5.3...v1.5.4
+
+
 ## v1.5.3 - 2026-04-26
 
 ## What's Changed
