@@ -1,6 +1,6 @@
 {
   "name": "jwt-studio",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "A studio for working with JSON Web Tokens",
   "author": "JWT Studio Contributors",
   "type": "module",
