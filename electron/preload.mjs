@@ -5,5 +5,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   platform: process.platform,
   saveConfig: (data) => ipcRenderer.invoke('save-config', data),
   openConfig: () => ipcRenderer.invoke('open-config'),
-  setTitleBarColor: (color) => ipcRenderer.send('set-title-bar-color', color),
+  readStore: () => ipcRenderer.invoke('read-store'),
+  writeStore: (data) => ipcRenderer.invoke('write-store', data),
+  setTitleBarColor: (theme) => ipcRenderer.send('set-title-bar-color', theme),
+  checkForUpdates: () => ipcRenderer.invoke('check-for-updates'),
+  openExternal: (url) => ipcRenderer.invoke('open-external', url),
 });

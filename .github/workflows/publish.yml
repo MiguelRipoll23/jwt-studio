@@ -59,6 +59,46 @@ jobs:
           generateReleaseNotes: true
           allowUpdates: true
 
+  build:
+    name: Build (${{ matrix.os }})
+    needs: [create-tag, create-release]
+    if: needs.create-tag.outputs.tag-name != ''
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run electron:build
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+
+      - name: Upload artifacts
+        shell: bash
+        run: |
+          files=$(find release -maxdepth 2 \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" \) | tr '\n' ' ')
+          if [ -n "$files" ]; then
+            gh release upload "$TAG_NAME" $files --clobber
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ needs.create-tag.outputs.tag-name }}
+
   update-changelog:
     name: Update changelog
     needs: [create-tag, create-release]
