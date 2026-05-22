@@ -3,6 +3,12 @@ import { fileURLToPath } from 'node:url'
 import { readFile, writeFile, mkdir } from 'node:fs/promises'
 import { request } from 'node:https'
 import path from 'node:path'
+import { updateElectronApp } from 'update-electron-app'
+
+// Initialize auto-updates in production
+if (app.isPackaged) {
+  updateElectronApp()
+}
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
