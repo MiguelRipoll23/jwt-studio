@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.6.0 - 2026-05-22
+
+## What's Changed
+* feat: replace custom update check with update-electron-app by @MiguelRipoll23 in https://github.com/MiguelRipoll23/jwt-studio/pull/13
+* Bump version to v1.6.0 by @github-actions[bot] in https://github.com/MiguelRipoll23/jwt-studio/pull/14
+
+
+**Full Changelog**: https://github.com/MiguelRipoll23/jwt-studio/compare/v1.5.4...v1.6.0
+
+
 ## v1.5.4 - 2026-04-26
 
 ## What's Changed
