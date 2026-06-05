@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.9.0 - 2026-06-05
+
+## What's Changed
+* feat: show background download progress indicator in settings by @MiguelRipoll23 in https://github.com/MiguelRipoll23/jwt-studio/pull/26
+* Bump version to v1.9.0 by @github-actions[bot] in https://github.com/MiguelRipoll23/jwt-studio/pull/27
+
+
+**Full Changelog**: https://github.com/MiguelRipoll23/jwt-studio/compare/v1.8.2...v1.9.0
+
+
 ## v1.8.2 - 2026-06-05
 
 ## What's Changed
