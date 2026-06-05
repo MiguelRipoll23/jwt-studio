@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.8.1 - 2026-06-05
+
+## What's Changed
+* fix: configure electron-builder icon paths for NSIS installer by @MiguelRipoll23 in https://github.com/MiguelRipoll23/jwt-studio/pull/22
+* Bump version to v1.8.1 by @github-actions[bot] in https://github.com/MiguelRipoll23/jwt-studio/pull/23
+
+
+**Full Changelog**: https://github.com/MiguelRipoll23/jwt-studio/compare/v1.8.0...v1.8.1
+
+
 ## v1.8.0 - 2026-06-05
 
 ## What's Changed
