@@ -120,7 +120,7 @@ export function Sidebar({ store, appSettings, onNewProject, onOpenSettings }: Si
       <div className="flex-1 overflow-y-auto px-2 py-1">
         {store.projects.length === 0 ? null : (
           <div className="flex flex-col gap-1.5">
-            {store.projects.map(project => (
+            {[...store.projects].sort((a, b) => a.name.localeCompare(b.name)).map(project => (
               <ProjectItem
                 key={project.id}
                 project={project}
