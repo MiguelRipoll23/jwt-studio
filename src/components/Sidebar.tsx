@@ -89,7 +89,7 @@ export function Sidebar({ store, appSettings, onNewProject, onOpenSettings }: Si
       {/* Header */}
       {!collapsed && (
         <div className="flex items-center justify-between px-4 py-3">
-          <span className="text-xs font-medium text-[var(--gray-500)] uppercase tracking-wide">Projects</span>
+          <span className="text-xs font-semibold text-black capitalize">Projects</span>
           <Button
             color="secondary"
             variant="ghost"
