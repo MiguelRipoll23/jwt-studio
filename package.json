@@ -36,17 +36,14 @@
       "!**/*.d.ts"
     ],
     "win": {
-      "target": "nsis",
-      "icon": "electron/icon.ico"
+      "target": "nsis"
     },
     "nsis": {},
     "mac": {
-      "target": "dmg",
-      "icon": "electron/icon.png"
+      "target": "dmg"
     },
     "linux": {
-      "target": "AppImage",
-      "icon": "electron/icon.png"
+      "target": "AppImage"
     }
   },
   "dependencies": {
