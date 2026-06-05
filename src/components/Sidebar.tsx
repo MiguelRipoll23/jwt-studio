@@ -73,8 +73,8 @@ export function Sidebar({ store, appSettings, onNewProject, onOpenSettings }: Si
   return (
     <aside className={`flex flex-col h-full ${collapsed ? 'w-14' : 'w-60'} shrink-0 border-r border-[var(--alpha-08)] bg-[var(--gray-50)] transition-all duration-200 overflow-hidden`}>
       {/* Logo + Collapse Button */}
-      <div className={`flex items-center border-b border-[var(--alpha-08)] px-3 py-3 ${collapsed ? 'justify-center' : 'justify-between px-4'}`}>
-        {!collapsed && <KeyRound className="w-5 h-5 text-[var(--gray-800)]" />}
+      <div className="flex items-center justify-between border-b border-[var(--alpha-08)] px-3 py-3">
+        <KeyRound className="w-5 h-5 text-blue-500" />
         <Button
           color="secondary"
           variant="ghost"
