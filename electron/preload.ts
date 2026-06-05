@@ -10,8 +10,14 @@ contextBridge.exposeInMainWorld('electronAPI', {
   setTitleBarColor: (theme: string): void => ipcRenderer.send('set-title-bar-color', theme),
   checkForUpdates: (): Promise<{ version: string; url: string } | null> => ipcRenderer.invoke('check-for-updates'),
   openExternal: (url: string): Promise<void> => ipcRenderer.invoke('open-external', url),
-  onUpdateDownloaded: (callback: (info: { version: string }) => void): void => {
-    ipcRenderer.on('update-downloaded', (_event, info) => callback(info))
+  onUpdateAvailable: (callback: (version: string) => void): void => {
+    ipcRenderer.on('update-available', (_event, version) => callback(version))
+  },
+  onDownloadProgress: (callback: (info: { percent: number; transferred: number; total: number }) => void): void => {
+    ipcRenderer.on('update-download-progress', (_event, info) => callback(info))
+  },
+  onUpdateDownloaded: (callback: () => void): void => {
+    ipcRenderer.on('update-downloaded', () => callback())
   },
   restartAndInstall: (): void => {
     ipcRenderer.send('restart-and-install')
