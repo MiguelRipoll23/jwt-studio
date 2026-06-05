@@ -18,6 +18,14 @@ if (app.isPackaged) {
     mainWindow?.webContents.send('update-available', info.version)
   })
 
+  autoUpdater.on('download-progress', (info) => {
+    mainWindow?.webContents.send('update-download-progress', {
+      percent: info.percent,
+      transferred: info.transferred,
+      total: info.total,
+    })
+  })
+
   autoUpdater.on('update-downloaded', () => {
     mainWindow?.webContents.send('update-downloaded')
   })
