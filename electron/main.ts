@@ -37,6 +37,7 @@ function createWindow() {
     titleBarStyle: 'default',
     backgroundColor: isDark ? '#0d0d0d' : '#f9f9f9',
     title: 'JWT Studio',
+    icon: path.join(__dirname, app.isPackaged ? '../dist/icon.png' : '../public/icon.png'),
 
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
