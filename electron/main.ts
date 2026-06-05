@@ -48,7 +48,7 @@ function setTitleBarColor(theme: string) {
 
 function createWindow() {
   const isDark = nativeTheme.shouldUseDarkColors;
-  mainWindow = new BrowserWindow({
+  const win = new BrowserWindow({
     width: 1000,
     height: 600,
     minWidth: 900,
@@ -65,11 +65,19 @@ function createWindow() {
       nodeIntegration: false,
     },
   })
+  mainWindow = win
+
+  // Open devtools with F12
+  win.webContents.on('before-input-event', (_, input) => {
+    if (input.key === 'F12') {
+      win.webContents.toggleDevTools()
+    }
+  })
 
   if (process.env['VITE_DEV_SERVER_URL']) {
-    mainWindow.loadURL(process.env['VITE_DEV_SERVER_URL'])
+    win.loadURL(process.env['VITE_DEV_SERVER_URL'])
   } else {
-    mainWindow.loadFile(path.join(__dirname, '../dist/index.html'))
+    win.loadFile(path.join(__dirname, '../dist/index.html'))
   }
 }
 
