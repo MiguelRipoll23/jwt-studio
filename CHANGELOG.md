@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.9.1 - 2026-06-05
+
+## What's Changed
+* fix: correct author name and NSIS artifact naming for auto-updater by @MiguelRipoll23 in https://github.com/MiguelRipoll23/jwt-studio/pull/28
+* Bump version to v1.9.1 by @github-actions[bot] in https://github.com/MiguelRipoll23/jwt-studio/pull/29
+
+
+**Full Changelog**: https://github.com/MiguelRipoll23/jwt-studio/compare/v1.9.0...v1.9.1
+
+
 ## v1.9.0 - 2026-06-05
 
 ## What's Changed
