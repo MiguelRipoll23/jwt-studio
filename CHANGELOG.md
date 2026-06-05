@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.7.0 - 2026-06-05
+
+## What's Changed
+* feat: add custom app icon by @MiguelRipoll23 in https://github.com/MiguelRipoll23/jwt-studio/pull/15
+* feat: sort projects alphabetically in sidebar by @MiguelRipoll23 in https://github.com/MiguelRipoll23/jwt-studio/pull/17
+* style: update section headers by @MiguelRipoll23 in https://github.com/MiguelRipoll23/jwt-studio/pull/18
+* Bump version to v1.7.0 by @github-actions[bot] in https://github.com/MiguelRipoll23/jwt-studio/pull/19
+
+
+**Full Changelog**: https://github.com/MiguelRipoll23/jwt-studio/compare/v1.6.0...v1.7.0
+
+
 ## v1.6.0 - 2026-05-22
 
 ## What's Changed
