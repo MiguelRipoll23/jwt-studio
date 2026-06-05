@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@openai/apps-sdk-ui/components/Button';
 import { Alert } from '@openai/apps-sdk-ui/components/Alert';
 import { Badge } from '@openai/apps-sdk-ui/components/Badge';
@@ -73,6 +73,22 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
   // Update check state
   const [updateStatus, setUpdateStatus] = useState<'idle' | 'checking' | 'up-to-date' | 'available' | 'error'>('idle');
   const [latestRelease, setLatestRelease] = useState<{ version: string; url: string } | null>(null);
+  const [downloadProgress, setDownloadProgress] = useState<{ percent: number } | null>(null);
+  const [updateReady, setUpdateReady] = useState(false);
+
+  useEffect(() => {
+    window.electronAPI?.onUpdateAvailable((version) => {
+      setUpdateStatus('available');
+      setLatestRelease({ version, url: `https://github.com/MiguelRipoll23/jwt-studio/releases/tag/v${version}` });
+    });
+    window.electronAPI?.onDownloadProgress((info) => {
+      setDownloadProgress({ percent: info.percent });
+    });
+    window.electronAPI?.onUpdateDownloaded(() => {
+      setDownloadProgress(null);
+      setUpdateReady(true);
+    });
+  }, []);
 
   async function handleCheckForUpdates() {
     setUpdateStatus('checking');
@@ -471,6 +487,36 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                       color="danger"
                       variant="soft"
                       description="Could not check for updates. Please try again later."
+                    />
+                  )}
+
+                  {downloadProgress && (
+                    <Alert
+                      color="info"
+                      variant="soft"
+                      indicator={<Download className="w-4 h-4" />}
+                      title="Downloading update…"
+                      description={`${Math.round(downloadProgress.percent)}% complete`}
+                    />
+                  )}
+
+                  {updateReady && (
+                    <Alert
+                      color="success"
+                      variant="soft"
+                      indicator={<CheckCircle className="w-4 h-4" />}
+                      title="Update ready to install"
+                      description="The app will restart and install the update."
+                      actions={
+                        <Button
+                          color="primary"
+                          variant="solid"
+                          size="xs"
+                          onClick={() => window.electronAPI?.restartAndInstall()}
+                        >
+                          Restart now
+                        </Button>
+                      }
                     />
                   )}
                 </div>
