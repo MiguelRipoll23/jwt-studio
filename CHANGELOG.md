@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.9.2 - 2026-06-05
+
+## What's Changed
+* fix: settings runtime error and add devtools shortcut by @MiguelRipoll23 in https://github.com/MiguelRipoll23/jwt-studio/pull/30
+* Bump version to v1.9.2 by @github-actions[bot] in https://github.com/MiguelRipoll23/jwt-studio/pull/31
+
+
+**Full Changelog**: https://github.com/MiguelRipoll23/jwt-studio/compare/v1.9.1...v1.9.2
+
+
 ## v1.9.1 - 2026-06-05
 
 ## What's Changed
