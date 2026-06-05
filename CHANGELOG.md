@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.8.0 - 2026-06-05
+
+## What's Changed
+* feat: replace update-electron-app with electron-updater by @MiguelRipoll23 in https://github.com/MiguelRipoll23/jwt-studio/pull/20
+* Bump version to v1.8.0 by @github-actions[bot] in https://github.com/MiguelRipoll23/jwt-studio/pull/21
+
+
+**Full Changelog**: https://github.com/MiguelRipoll23/jwt-studio/compare/v1.7.0...v1.8.0
+
+
 ## v1.7.0 - 2026-06-05
 
 ## What's Changed
