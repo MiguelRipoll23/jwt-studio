@@ -2,7 +2,7 @@
   "name": "jwt-studio",
   "version": "1.9.0",
   "description": "A studio for working with JSON Web Tokens",
-  "author": "JWT Studio Contributors",
+  "author": "MiguelRipoll23",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MiguelRipoll23/jwt-studio.git"
@@ -39,7 +39,9 @@
       "target": "nsis",
       "icon": "electron/icon.ico"
     },
-    "nsis": {},
+    "nsis": {
+      "artifactName": "${productName}.Setup.${version}.${ext}"
+    },
     "mac": {
       "target": "dmg",
       "icon": "electron/icon.png"
