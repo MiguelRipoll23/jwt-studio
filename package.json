@@ -21,6 +21,11 @@
     "productName": "JWT Studio",
     "npmRebuild": false,
     "nodeGypRebuild": false,
+    "publish": {
+      "provider": "github",
+      "owner": "MiguelRipoll23",
+      "repo": "jwt-studio"
+    },
     "directories": {
       "output": "release"
     },
@@ -48,7 +53,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router": "^7.13.1",
-    "update-electron-app": "^3.2.0"
+    "electron-updater": "^6.6.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

@@ -1,19 +1,31 @@
 import { app, BrowserWindow, Menu, ipcMain, dialog, nativeTheme, shell } from 'electron'
 import { fileURLToPath } from 'node:url'
 import { readFile, writeFile, mkdir } from 'node:fs/promises'
-import { request } from 'node:https'
 import path from 'node:path'
-import { updateElectronApp } from 'update-electron-app'
-
-// Initialize auto-updates in production
-if (app.isPackaged) {
-  updateElectronApp()
-}
+import { autoUpdater } from 'electron-updater'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // Remove native menu bar entirely
 Menu.setApplicationMenu(null)
+
+// Auto-updater
+if (app.isPackaged) {
+  autoUpdater.autoDownload = true
+  autoUpdater.autoInstallOnAppQuit = true
+
+  autoUpdater.on('update-available', (info) => {
+    mainWindow?.webContents.send('update-available', info.version)
+  })
+
+  autoUpdater.on('update-downloaded', () => {
+    mainWindow?.webContents.send('update-downloaded')
+  })
+
+  autoUpdater.on('error', (err) => {
+    console.error('Auto-updater error:', err)
+  })
+}
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -99,32 +111,24 @@ ipcMain.on('set-title-bar-color', (_event, theme: string) => {
   setTitleBarColor(theme);
 });
 
-// IPC: check GitHub for the latest release
+// IPC: check for updates using electron-updater
 ipcMain.handle('check-for-updates', () => {
   return new Promise<{ version: string; url: string } | null>((resolve) => {
-    const options = {
-      hostname: 'api.github.com',
-      path: '/repos/MiguelRipoll23/jwt-studio/releases/latest',
-      headers: { 'User-Agent': 'jwt-studio-app' },
-    };
-    const req = request(options, (res) => {
-      let body = '';
-      res.on('data', (chunk: Buffer) => { body += chunk.toString(); });
-      res.on('end', () => {
-        try {
-          const json = JSON.parse(body) as { tag_name?: string; html_url?: string };
-          if (!json.tag_name) return resolve(null);
-          const version = json.tag_name.replace(/^v/, '');
-          resolve({ version, url: json.html_url ?? 'https://github.com/MiguelRipoll23/jwt-studio/releases/latest' });
-        } catch {
-          resolve(null);
-        }
-      });
-    });
-    req.on('error', () => resolve(null));
-    req.end();
-  });
-});
+    if (!app.isPackaged) return resolve(null)
+
+    autoUpdater.checkForUpdates().then((result) => {
+      if (!result?.updateInfo) return resolve(null)
+      const version = result.updateInfo.version
+      const url = `https://github.com/MiguelRipoll23/jwt-studio/releases/tag/v${version}`
+      resolve({ version, url })
+    }).catch(() => resolve(null))
+  })
+})
+
+// IPC: restart and install update
+ipcMain.on('restart-and-install', () => {
+  autoUpdater.quitAndInstall()
+})
 
 // IPC: open a URL in the system browser
 ipcMain.handle('open-external', (_event, url: string) => {
@@ -133,6 +137,11 @@ ipcMain.handle('open-external', (_event, url: string) => {
 
 app.whenReady().then(() => {
   createWindow()
+
+  if (app.isPackaged) {
+    autoUpdater.checkForUpdates()
+  }
+
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })

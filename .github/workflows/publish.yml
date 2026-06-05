@@ -93,7 +93,7 @@ jobs:
         run: |
           while IFS= read -r -d $'\0' file; do
             gh release upload "$TAG_NAME" "$file" --clobber
-          done < <(find release -maxdepth 2 \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" \) -print0)
+          done < <(find release -maxdepth 2 \( -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" -o -name "latest*.yml" \) -print0)
         env:
           GH_TOKEN: ${{ github.token }}
           TAG_NAME: ${{ needs.create-tag.outputs.tag-name }}
