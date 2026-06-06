@@ -1,6 +1,6 @@
 {
   "name": "jwt-studio",
-  "version": "1.9.3-beta.2",
+  "version": "1.9.3",
   "description": "A studio for working with JSON Web Tokens",
   "author": "MiguelRipoll23",
   "repository": {
