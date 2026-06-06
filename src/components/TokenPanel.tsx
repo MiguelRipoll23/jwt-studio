@@ -30,7 +30,7 @@ function TokenItem({
       className={[
         'group flex items-center gap-2.5 w-full px-3 py-2 rounded-lg cursor-pointer transition-colors',
         selected
-          ? 'bg-[var(--alpha-08)] text-[var(--gray-900)]'
+          ? 'bg-[var(--alpha-15)] text-[var(--gray-900)] font-medium'
           : 'hover:bg-[var(--alpha-05)] text-[var(--gray-900)]',
       ].join(' ')}
       onClick={onClick}

@@ -35,7 +35,7 @@ function ProjectItem({
         'flex items-center gap-2.5 w-full rounded-lg text-left transition-colors text-sm',
         collapsed ? 'justify-center px-2 py-2' : 'px-3 py-2',
         selected
-          ? 'bg-[var(--alpha-08)] text-[var(--gray-900)] font-medium'
+          ? 'bg-[var(--alpha-15)] text-[var(--gray-900)] font-medium'
           : 'text-[var(--gray-900)] hover:bg-[var(--alpha-05)]',
       ].join(' ')}
     >
