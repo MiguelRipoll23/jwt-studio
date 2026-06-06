@@ -5,7 +5,7 @@ import { getIcon } from './IconPicker';
 import type { ProjectStore } from '../store';
 import type { Project, ThemeMode } from '../types';
 import type { AppSettingsStore } from '../appSettings';
-import { applyDocumentTheme, useDocumentTheme } from '@openai/apps-sdk-ui/theme';
+import { applyDocumentTheme } from '@openai/apps-sdk-ui/theme';
 import { THEME_KEY } from '../main';
 
 interface SidebarProps {
@@ -36,19 +36,20 @@ function ProjectItem({
         collapsed ? 'justify-center px-2 py-2' : 'px-3 py-2',
         selected
           ? 'bg-[var(--alpha-08)] text-[var(--gray-900)] font-medium'
-          : 'text-[var(--gray-700)] hover:bg-[var(--alpha-05)] hover:text-[var(--gray-900)]',
+          : 'text-[var(--gray-900)] hover:bg-[var(--alpha-05)]',
       ].join(' ')}
     >
-      <Icon className="w-5 h-5 shrink-0 text-[var(--gray-600)]" />
+      <Icon className="w-5 h-5 shrink-0 text-[var(--gray-800)]" />
       {!collapsed && <span className="truncate">{project.name}</span>}
     </button>
   );
 }
 
 export function Sidebar({ store, appSettings, onNewProject, onOpenSettings }: SidebarProps) {
-  const theme = useDocumentTheme();
-  const isDark = theme === 'dark';
   const { settings, updateSettings } = appSettings;
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const effectiveTheme = settings.themeMode === 'system' ? (prefersDark ? 'dark' : 'light') : settings.themeMode;
+  const isDark = effectiveTheme === 'dark';
 
   function applyTheme(themeMode: ThemeMode) {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -59,12 +60,11 @@ export function Sidebar({ store, appSettings, onNewProject, onOpenSettings }: Si
   }
 
   function toggleTheme() {
-    // Cycle: system -> light -> dark -> system
-    const current = settings.themeMode;
-    let next: ThemeMode;
-    if (current === 'system') next = 'light';
-    else if (current === 'light') next = 'dark';
-    else next = 'system';
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const currentEffective = settings.themeMode === 'system'
+      ? (prefersDark ? 'dark' : 'light')
+      : settings.themeMode;
+    const next: ThemeMode = currentEffective === 'dark' ? 'light' : 'dark';
     updateSettings({ themeMode: next });
     applyTheme(next);
   }
@@ -74,7 +74,7 @@ export function Sidebar({ store, appSettings, onNewProject, onOpenSettings }: Si
     <aside className={`flex flex-col h-full ${collapsed ? 'w-14' : 'w-60'} shrink-0 border-r border-[var(--alpha-08)] bg-[var(--gray-50)] transition-all duration-200 overflow-hidden`}>
       {/* Logo + Collapse Button */}
       <div className="flex items-center justify-between border-b border-[var(--alpha-08)] px-3 py-3">
-        <KeyRound className="w-5 h-5 text-blue-500" />
+        <KeyRound className="w-5 h-5 text-[var(--gray-900)]" />
         <Button
           color="secondary"
           variant="ghost"
@@ -89,7 +89,7 @@ export function Sidebar({ store, appSettings, onNewProject, onOpenSettings }: Si
       {/* Header */}
       {!collapsed && (
         <div className="flex items-center justify-between px-4 py-3">
-          <span className="text-xs font-semibold text-black capitalize">Projects</span>
+          <span className="text-xs font-semibold text-[var(--gray-900)] capitalize">Projects</span>
           <Button
             color="secondary"
             variant="ghost"
