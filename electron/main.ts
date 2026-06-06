@@ -148,7 +148,7 @@ ipcMain.handle('check-for-updates', () => {
       }
       const version = result.updateInfo.version
       const url = `https://github.com/MiguelRipoll23/jwt-studio/releases/tag/v${version}`
-      console.log(`[auto-updater] checkForUpdates result: current=${__APP_VERSION__}, latest=${version}`)
+      console.log(`[auto-updater] checkForUpdates result: current=${app.getVersion()}, latest=${version}`)
       resolve({ version, url })
     }).catch((err) => {
       console.error('[auto-updater] checkForUpdates failed:', err)
