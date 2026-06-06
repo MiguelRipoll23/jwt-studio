@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.9.3-beta.2 - 2026-06-06
+
+## What's Changed
+* fix: dark mode contrast improvements by @MiguelRipoll23 in https://github.com/MiguelRipoll23/jwt-studio/pull/34
+* Bump version to v1.9.3-beta.2 by @github-actions[bot] in https://github.com/MiguelRipoll23/jwt-studio/pull/35
+
+
+**Full Changelog**: https://github.com/MiguelRipoll23/jwt-studio/compare/v1.9.3-beta.1...v1.9.3-beta.2
+
+
 ## v1.9.3-beta.1 - 2026-06-06
 
 ## What's Changed
