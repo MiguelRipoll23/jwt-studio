@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.9.3 - 2026-06-06
+
+## What's Changed
+* fix: theme toggle, dark mode contrast, and update logging by @MiguelRipoll23 in https://github.com/MiguelRipoll23/jwt-studio/pull/32
+* Bump version to v1.9.3-beta.1 by @github-actions[bot] in https://github.com/MiguelRipoll23/jwt-studio/pull/33
+* fix: dark mode contrast improvements by @MiguelRipoll23 in https://github.com/MiguelRipoll23/jwt-studio/pull/34
+* Bump version to v1.9.3-beta.2 by @github-actions[bot] in https://github.com/MiguelRipoll23/jwt-studio/pull/35
+* Bump version to v1.9.3 by @github-actions[bot] in https://github.com/MiguelRipoll23/jwt-studio/pull/36
+
+
+**Full Changelog**: https://github.com/MiguelRipoll23/jwt-studio/compare/v1.9.2...v1.9.3
+
+
 ## v1.9.3-beta.2 - 2026-06-06
 
 ## What's Changed
