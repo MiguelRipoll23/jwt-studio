@@ -94,9 +94,9 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
 
   if (!selectedProject || !selectedToken || !selectedProjectId || !selectedTokenId) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-[var(--gray-400)] gap-3">
-        <KeyRound className="w-5 h-5" />
-        <p className="text-sm text-[var(--gray-500)]">Select a token to view and edit</p>
+      <div className="flex flex-col items-center justify-center h-full text-[var(--gray-700)] gap-3">
+        <KeyRound className="w-5 h-5 text-[var(--gray-900)]" />
+        <p className="text-sm text-[var(--gray-700)]">Select a token to view and edit</p>
       </div>
     );
   }
@@ -108,7 +108,7 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
       {/* Token Header */}
       <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--alpha-08)] shrink-0">
         <div className="flex items-center gap-2">
-          <TokenIcon className="w-5 h-5 text-[var(--gray-600)]" />
+          <TokenIcon className="w-5 h-5 text-[var(--gray-900)]" />
           <h3 className="font-semibold text-[var(--gray-900)] mb-0.5">{selectedToken.name}</h3>
         </div>
         <div className="flex items-center gap-3">
@@ -120,7 +120,7 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
             onClick={() => setShowTokenEdit(true)}
             title="Edit token"
           >
-            <Pencil className="w-5 h-5" />
+            <Pencil className="w-5 h-5 text-[var(--gray-900)]" />
           </Button>
           <Button
             color="danger"
@@ -157,7 +157,7 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
         {/* Payload Editor */}
         <div className="px-5 py-4 flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-[var(--gray-700)]">Payload (JSON)</label>
+            <label className="text-sm font-medium text-[var(--gray-900)]">Payload</label>
             {payloadError ? (
               <Badge color="danger" size="sm">
                 <AlertTriangle className="w-4 h-4 mr-1" />
@@ -187,7 +187,7 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
         {/* JWT Output */}
         <div className="px-5 py-4 flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-[var(--gray-700)]">Signed token</label>
+            <label className="text-sm font-medium text-[var(--gray-900)]">Signed token</label>
             <div className="flex items-center gap-2">
               
               {jwt && (
@@ -198,8 +198,8 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
       size="xs"
       onClick={handleCopy}
     >
-      <Copy className="w-5 h-5" />
-      {copied ? 'Copied!' : 'Copy'}
+      <Copy className="w-5 h-5 text-[var(--gray-900)]" />
+      <span className="text-[var(--gray-900)]">{copied ? 'Copied!' : 'Copy'}</span>
     </Button>
   </div>
 )}
@@ -216,7 +216,7 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
           )}
 
           {isGenerating && (
-            <div className="text-xs text-[var(--gray-500)] py-2">Generating...</div>
+            <div className="text-xs text-[var(--gray-700)] py-2">Generating...</div>
           )}
 
           {jwt && !isGenerating && (
@@ -226,15 +226,15 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
               title="Click to copy"
             >
               <span className="text-[#e67c73]">{jwt.split('.')[0]}</span>
-              <span className="text-[var(--gray-500)]">.</span>
+              <span className="text-[var(--gray-700)]">.</span>
               <span className="text-[#4caf8a]">{jwt.split('.')[1]}</span>
-              <span className="text-[var(--gray-500)]">.</span>
+              <span className="text-[var(--gray-700)]">.</span>
               <span className="text-[#6fa8dc]">{jwt.split('.')[2]}</span>
             </div>
           )}
 
           {!jwt && !isGenerating && !jwtError && (
-            <div className="text-xs text-[var(--gray-400)] py-2">JWT will appear here</div>
+            <div className="text-xs text-[var(--gray-700)] py-2">JWT will appear here</div>
           )}
         </div>
       </div>

@@ -39,7 +39,7 @@ function TokenItem({
       onKeyDown={e => e.key === 'Enter' && onClick()}
     >
       <div className="flex items-center gap-2">
-        <Icon className="w-5 h-5 shrink-0 text-[var(--gray-800)]" />
+        <Icon className="w-5 h-5 shrink-0 text-[var(--gray-900)]" />
         <span className="truncate text-sm font-medium">{token.name}</span>
       </div>
 
@@ -55,7 +55,7 @@ export function TokenPanel({ store }: TokenPanelProps) {
 
   if (!selectedProject || !selectedProjectId) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-[var(--gray-500)] gap-2">
+      <div className="flex flex-col items-center justify-center h-full text-[var(--gray-700)] gap-2">
         <Folder className="w-5 h-5" />
         <p className="text-sm">Select a project</p>
       </div>
@@ -82,7 +82,7 @@ export function TokenPanel({ store }: TokenPanelProps) {
               onClick={() => setShowProjectEdit(true)}
               title="Edit project"
             >
-              <Pencil className="w-5 h-5" />
+              <Pencil className="w-5 h-5 text-[var(--gray-900)]" />
             </Button>
             <Button
               color="danger"
@@ -97,7 +97,7 @@ export function TokenPanel({ store }: TokenPanelProps) {
           </div>
         </div>
         <div className="flex flex-wrap gap-1.5">
-          <Badge color="info" size="sm">
+          <Badge color="success" size="sm">
             {selectedProject.algorithm}
           </Badge>
           <Badge color="secondary" size="sm">{algorithmType}</Badge>
@@ -166,11 +166,11 @@ export function TokenPanel({ store }: TokenPanelProps) {
             onClick={() => setShowTokenForm(true)}
             title="New Token"
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-5 h-5 text-[var(--gray-900)]" />
           </Button>
         </div>
         {selectedProject.tokens.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-8 text-[var(--gray-400)] gap-2">
+          <div className="flex flex-col items-center justify-center py-8 text-[var(--gray-700)] gap-2">
             <KeyRound className="w-5 h-5" />
             <p className="text-xs">No tokens yet</p>
           </div>

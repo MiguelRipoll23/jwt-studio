@@ -109,13 +109,13 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
         placeholder="Search icons..."
         value={search}
         onChange={e => setSearch(e.target.value)}
-        startAdornment={<Search className="w-4 h-4 text-[var(--gray-500)]" />}
+        startAdornment={<Search className="w-4 h-4 text-[var(--gray-700)]" />}
         size="sm"
       />
       <div className="max-h-40 overflow-y-auto space-y-2 w-full -mx-2 px-2">
         {Object.entries(filteredCategories).map(([category, icons]) => (
           <div key={category}>
-            <h4 className="text-xs font-semibold text-[var(--gray-600)] mb-1 px-1">{category}</h4>
+            <h4 className="text-xs font-semibold text-[var(--gray-700)] mb-1 px-1">{category}</h4>
             <div className="grid gap-0.5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(2rem, 1fr))' }}>
               {icons.map(name => {
                 const Icon = getIcon(name);
