@@ -152,11 +152,11 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-[var(--alpha-08)] shrink-0">
           <div className="flex items-center gap-2.5">
-            <SettingsIcon className="w-5 h-5 text-[var(--gray-600)]" />
+            <SettingsIcon className="w-5 h-5 text-[var(--gray-900)]" />
             <span className="font-semibold text-[var(--gray-900)]">Settings</span>
           </div>
           <Button color="secondary" variant="ghost" size="xs" uniform onClick={onClose}>
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 text-[var(--gray-900)]" />
           </Button>
         </div>
 
@@ -173,7 +173,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                   'flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-left text-sm transition-colors',
                   section === id
                     ? 'bg-[var(--alpha-08)] text-[var(--gray-900)] font-medium'
-                    : 'text-[var(--gray-600)] hover:bg-[var(--alpha-05)] hover:text-[var(--gray-900)]',
+                    : 'text-[var(--gray-700)] hover:bg-[var(--alpha-05)] hover:text-[var(--gray-900)]',
                 ].join(' ')}
               >
                 <Icon className="w-4 h-4 shrink-0" />
@@ -193,8 +193,8 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center justify-between gap-4">
                       <div>
-                        <p className="text-sm text-[var(--gray-800)]">Default algorithm</p>
-                        <p className="text-xs text-[var(--gray-500)]">Used when creating a new project</p>
+                        <p className="text-sm text-[var(--gray-900)]">Default algorithm</p>
+                        <p className="text-xs text-[var(--gray-700)]">Used when creating a new project</p>
                       </div>
                       <div className="w-32 shrink-0">
                         <Select
@@ -209,8 +209,8 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                     </div>
                     <div className="flex items-center justify-between gap-4">
                       <div>
-                        <p className="text-sm text-[var(--gray-800)]">Default token duration</p>
-                        <p className="text-xs text-[var(--gray-500)]">Expiry applied to new project tokens</p>
+                        <p className="text-sm text-[var(--gray-900)]">Default token duration</p>
+                        <p className="text-xs text-[var(--gray-700)]">Expiry applied to new project tokens</p>
                       </div>
                       <div className="w-32 shrink-0">
                         <Select
@@ -231,8 +231,8 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                   <div className="flex flex-col gap-4">
                     <div className="flex items-center justify-between gap-4">
                       <div>
-                        <p className="text-sm text-[var(--gray-800)]">Confirm before deleting</p>
-                        <p className="text-xs text-[var(--gray-500)]">Show a confirmation prompt when deleting projects or tokens</p>
+                        <p className="text-sm text-[var(--gray-900)]">Confirm before deleting</p>
+                        <p className="text-xs text-[var(--gray-700)]">Show a confirmation prompt when deleting projects or tokens</p>
                       </div>
                       <Switch
                         checked={settings.confirmDelete}
@@ -241,8 +241,8 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                     </div>
                     <div className="flex items-center justify-between gap-4">
                       <div>
-                        <p className="text-sm text-[var(--gray-800)]">Auto-copy token</p>
-                        <p className="text-xs text-[var(--gray-500)]">Automatically copy the signed token to clipboard when generated</p>
+                        <p className="text-sm text-[var(--gray-900)]">Auto-copy token</p>
+                        <p className="text-xs text-[var(--gray-700)]">Automatically copy the signed token to clipboard when generated</p>
                       </div>
                       <Switch
                         checked={settings.autoCopyToken}
@@ -293,8 +293,8 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                   <h3 className="text-sm font-semibold text-[var(--gray-900)] mb-3">Theme</h3>
                   <div className="flex items-center justify-between gap-4">
                     <div>
-                      <p className="text-sm text-[var(--gray-800)]">Application theme</p>
-                      <p className="text-xs text-[var(--gray-500)]">Choose your preferred theme</p>
+                      <p className="text-sm text-[var(--gray-900)]">Application theme</p>
+                      <p className="text-xs text-[var(--gray-700)]">Choose your preferred theme</p>
                     </div>
                     <div className="w-40 shrink-0">
                       <Select
@@ -321,8 +321,8 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                 <div className="flex flex-col gap-2">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-sm font-medium text-[var(--gray-800)]">Export config</p>
-                      <p className="text-xs text-[var(--gray-500)]">
+                      <p className="text-sm font-medium text-[var(--gray-900)]">Export config</p>
+                      <p className="text-xs text-[var(--gray-700)]">
                         Save all projects and tokens to a JSON file.
                         You can use this file to back up or transfer your setup.
                       </p>
@@ -334,7 +334,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                       onClick={handleExport}
                       disabled={projects.length === 0}
                     >
-                      <Download className="w-4 h-4" />
+                      <Download className="w-4 h-4 text-[var(--gray-900)]" />
                       Export
                     </Button>
                   </div>
@@ -356,8 +356,8 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                 <div className="border-t border-[var(--alpha-05)] pt-4 flex flex-col gap-2">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-sm font-medium text-[var(--gray-800)]">Import config</p>
-                      <p className="text-xs text-[var(--gray-500)]">
+                      <p className="text-sm font-medium text-[var(--gray-900)]">Import config</p>
+                      <p className="text-xs text-[var(--gray-700)]">
                         Load projects from a previously exported config file.
                         This will replace all current data.
                       </p>
@@ -368,7 +368,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                       size="sm"
                       onClick={handleImportPick}
                     >
-                      <Upload className="w-4 h-4" />
+                      <Upload className="w-4 h-4 text-[var(--gray-900)]" />
                       Import
                     </Button>
                   </div>
@@ -393,7 +393,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                       actions={
                         <div className="flex gap-2">
                           <Button color="primary" variant="solid" size="xs" onClick={handleImportConfirm}>
-                            <CheckCircle className="w-3.5 h-3.5" />
+                            <CheckCircle className="w-3.5 h-3.5 text-[var(--gray-900)]" />
                             Confirm
                           </Button>
                           <Button color="secondary" variant="ghost" size="xs" onClick={() => { setImportStatus('idle'); setImportPreview(null); }}>
@@ -416,7 +416,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                   </div>
                   <div>
                     <p className="font-semibold text-[var(--gray-900)]">JWT Studio</p>
-                    <p className="text-xs text-[var(--gray-500)]">
+                    <p className="text-xs text-[var(--gray-700)]">
                       Local JWT project manager for developers
                     </p>
                   </div>
@@ -424,15 +424,15 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
 
                 <div className="flex flex-col gap-2 text-sm">
                   <div className="flex justify-between py-2 border-b border-[var(--alpha-05)]">
-                    <span className="text-[var(--gray-600)]">Version</span>
+                    <span className="text-[var(--gray-700)]">Version</span>
                     <Badge color="secondary" variant="soft" size="sm">v{__APP_VERSION__}</Badge>
                   </div>
                   <div className="flex justify-between py-2 border-b border-[var(--alpha-05)]">
-                    <span className="text-[var(--gray-600)]">Projects</span>
+                    <span className="text-[var(--gray-700)]">Projects</span>
                     <span className="font-medium text-[var(--gray-900)]">{projects.length}</span>
                   </div>
                   <div className="flex justify-between py-2 border-b border-[var(--alpha-05)]">
-                    <span className="text-[var(--gray-600)]">Tokens</span>
+                    <span className="text-[var(--gray-700)]">Tokens</span>
                     <span className="font-medium text-[var(--gray-900)]">
                       {projects.reduce((a, p) => a + p.tokens.length, 0)}
                     </span>
@@ -443,8 +443,8 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                 <div className="border-t border-[var(--alpha-05)] pt-4 flex flex-col gap-3">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-sm font-medium text-[var(--gray-800)]">Updates</p>
-                      <p className="text-xs text-[var(--gray-500)]">Check for a newer version on GitHub</p>
+                      <p className="text-sm font-medium text-[var(--gray-900)]">Updates</p>
+                      <p className="text-xs text-[var(--gray-700)]">Check for a newer version on GitHub</p>
                     </div>
                     <Button
                       color="secondary"
@@ -453,7 +453,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                       onClick={handleCheckForUpdates}
                       disabled={updateStatus === 'checking'}
                     >
-                      <RefreshCw className="w-4 h-4" />
+                      <RefreshCw className="w-4 h-4 text-[var(--gray-900)]" />
                       {updateStatus === 'checking' ? 'Checking…' : 'Check for updates'}
                     </Button>
                   </div>
@@ -481,7 +481,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                           size="xs"
                           onClick={() => window.electronAPI?.openExternal(latestRelease.url)}
                         >
-                          <Download className="w-3.5 h-3.5" />
+                          <Download className="w-3.5 h-3.5 text-[var(--gray-900)]" />
                           Download update
                         </Button>
                       }

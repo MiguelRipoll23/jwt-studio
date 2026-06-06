@@ -39,7 +39,7 @@ function ProjectItem({
           : 'text-[var(--gray-900)] hover:bg-[var(--alpha-05)]',
       ].join(' ')}
     >
-      <Icon className="w-5 h-5 shrink-0 text-[var(--gray-800)]" />
+      <Icon className="w-5 h-5 shrink-0 text-[var(--gray-900)]" />
       {!collapsed && <span className="truncate">{project.name}</span>}
     </button>
   );
@@ -73,8 +73,8 @@ export function Sidebar({ store, appSettings, onNewProject, onOpenSettings }: Si
   return (
     <aside className={`flex flex-col h-full ${collapsed ? 'w-14' : 'w-60'} shrink-0 border-r border-[var(--alpha-08)] bg-[var(--gray-50)] transition-all duration-200 overflow-hidden`}>
       {/* Logo + Collapse Button */}
-      <div className="flex items-center justify-between border-b border-[var(--alpha-08)] px-3 py-3">
-        <KeyRound className="w-5 h-5 text-[var(--gray-900)]" />
+      <div className={`flex items-center border-b border-[var(--alpha-08)] px-3 py-3 ${collapsed ? 'justify-center' : 'justify-between'}`}>
+        {!collapsed && <KeyRound className="w-5 h-5 text-[var(--gray-900)]" />}
         <Button
           color="secondary"
           variant="ghost"
@@ -83,7 +83,7 @@ export function Sidebar({ store, appSettings, onNewProject, onOpenSettings }: Si
           onClick={() => setCollapsed(c => !c)}
           title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
-          <PanelLeftClose className="w-5 h-5 transition-transform duration-200" style={{ transform: collapsed ? 'rotate(180deg)' : undefined }} />
+          <PanelLeftClose className="w-5 h-5 text-[var(--gray-900)] transition-transform duration-200" style={{ transform: collapsed ? 'rotate(180deg)' : undefined }} />
         </Button>
       </div>
       {/* Header */}
@@ -97,7 +97,7 @@ export function Sidebar({ store, appSettings, onNewProject, onOpenSettings }: Si
             onClick={onNewProject}
             title="New Project"
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-5 h-5 text-[var(--gray-900)]" />
           </Button>
         </div>
       )}
@@ -111,7 +111,7 @@ export function Sidebar({ store, appSettings, onNewProject, onOpenSettings }: Si
             onClick={onNewProject}
             title="New Project"
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-5 h-5 text-[var(--gray-900)]" />
           </Button>
         </div>
       )}
@@ -135,7 +135,7 @@ export function Sidebar({ store, appSettings, onNewProject, onOpenSettings }: Si
 
       {/* Footer: version + settings + theme */}
       <div className={`flex items-center border-t border-[var(--alpha-08)] px-2 py-2 ${collapsed ? 'flex-col gap-1' : 'justify-between px-4'}`}>
-        {!collapsed && <span className="text-xs text-[var(--gray-400)]">v{__APP_VERSION__}</span>}
+        {!collapsed && <span className="text-xs text-[var(--gray-900)]">v{__APP_VERSION__}</span>}
         <div className={`flex items-center gap-3 ${collapsed ? 'flex-col' : ''}`}>
           <Button
             color="secondary"
@@ -145,7 +145,7 @@ export function Sidebar({ store, appSettings, onNewProject, onOpenSettings }: Si
             onClick={toggleTheme}
             title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
           >
-            {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            {isDark ? <Sun className="w-5 h-5 text-[var(--gray-900)]" /> : <Moon className="w-5 h-5 text-[var(--gray-900)]" />}
           </Button>
           <Button
             color="secondary"
@@ -155,7 +155,7 @@ export function Sidebar({ store, appSettings, onNewProject, onOpenSettings }: Si
             onClick={onOpenSettings}
             title="Settings"
           >
-            <Settings className="w-5 h-5" />
+            <Settings className="w-5 h-5 text-[var(--gray-900)]" />
           </Button>
         </div>
       </div>

@@ -113,7 +113,7 @@ export function ProjectForm({ initial, onSubmit, onCancel, defaultAlgorithm = 'H
             value={secret}
             onChange={e => setSecret(e.target.value)}
             endAdornment={
-              <button type="button" onClick={() => setShowSecret(v => !v)} className="flex items-center text-[var(--gray-500)] hover:text-[var(--gray-700)]">
+              <button type="button" onClick={() => setShowSecret(v => !v)} className="flex items-center text-[var(--gray-700)] hover:text-[var(--gray-700)]">
                 {showSecret ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             }
