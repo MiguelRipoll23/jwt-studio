@@ -15,10 +15,12 @@ if (app.isPackaged) {
   autoUpdater.autoInstallOnAppQuit = true
 
   autoUpdater.on('update-available', (info) => {
+    console.log('[auto-updater] Update available:', info.version)
     mainWindow?.webContents.send('update-available', info.version)
   })
 
   autoUpdater.on('download-progress', (info) => {
+    console.log(`[auto-updater] Download progress: ${info.percent.toFixed(1)}% (${info.transferred}/${info.total} bytes)`)
     mainWindow?.webContents.send('update-download-progress', {
       percent: info.percent,
       transferred: info.transferred,
@@ -27,12 +29,15 @@ if (app.isPackaged) {
   })
 
   autoUpdater.on('update-downloaded', () => {
+    console.log('[auto-updater] Update downloaded and ready to install')
     mainWindow?.webContents.send('update-downloaded')
   })
 
   autoUpdater.on('error', (err) => {
-    console.error('Auto-updater error:', err)
+    console.error('[auto-updater] Error:', err)
   })
+} else {
+  console.log('[auto-updater] Skipped (dev mode)')
 }
 
 let mainWindow: BrowserWindow | null = null;
@@ -129,15 +134,26 @@ ipcMain.on('set-title-bar-color', (_event, theme: string) => {
 
 // IPC: check for updates using electron-updater
 ipcMain.handle('check-for-updates', () => {
+  console.log('[auto-updater] Manual check requested')
   return new Promise<{ version: string; url: string } | null>((resolve) => {
-    if (!app.isPackaged) return resolve(null)
+    if (!app.isPackaged) {
+      console.log('[auto-updater] Skipped (dev mode)')
+      return resolve(null)
+    }
 
     autoUpdater.checkForUpdates().then((result) => {
-      if (!result?.updateInfo) return resolve(null)
+      if (!result?.updateInfo) {
+        console.log('[auto-updater] No update info returned')
+        return resolve(null)
+      }
       const version = result.updateInfo.version
       const url = `https://github.com/MiguelRipoll23/jwt-studio/releases/tag/v${version}`
+      console.log(`[auto-updater] checkForUpdates result: current=${app.getVersion()}, latest=${version}`)
       resolve({ version, url })
-    }).catch(() => resolve(null))
+    }).catch((err) => {
+      console.error('[auto-updater] checkForUpdates failed:', err)
+      resolve(null)
+    })
   })
 })
 
@@ -155,6 +171,7 @@ app.whenReady().then(() => {
   createWindow()
 
   if (app.isPackaged) {
+    console.log('[auto-updater] Background check on startup')
     autoUpdater.checkForUpdates()
   }
 

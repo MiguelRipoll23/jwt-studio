@@ -78,28 +78,34 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
 
   useEffect(() => {
     window.electronAPI?.onUpdateAvailable((version) => {
+      console.log('[updater] Update available event:', version);
       setUpdateStatus('available');
       setLatestRelease({ version, url: `https://github.com/MiguelRipoll23/jwt-studio/releases/tag/v${version}` });
     });
     window.electronAPI?.onDownloadProgress((info) => {
+      console.log(`[updater] Download progress: ${info.percent.toFixed(1)}%`);
       setDownloadProgress({ percent: info.percent });
     });
     window.electronAPI?.onUpdateDownloaded(() => {
+      console.log('[updater] Update downloaded');
       setDownloadProgress(null);
       setUpdateReady(true);
     });
   }, []);
 
   async function handleCheckForUpdates() {
+    console.log('[updater] Check for updates clicked');
     setUpdateStatus('checking');
     setLatestRelease(null);
     try {
       const result = await window.electronAPI?.checkForUpdates();
-      if (!result) { setUpdateStatus('error'); return; }
+      if (!result) { console.log('[updater] No result from check'); setUpdateStatus('error'); return; }
       setLatestRelease(result);
       const isNewer = compareVersions(result.version, __APP_VERSION__) > 0;
+      console.log(`[updater] Current=${__APP_VERSION__}, Latest=${result.version}, Newer=${isNewer}`);
       setUpdateStatus(isNewer ? 'available' : 'up-to-date');
-    } catch {
+    } catch (e) {
+      console.error('[updater] Check failed:', e);
       setUpdateStatus('error');
     }
   }
