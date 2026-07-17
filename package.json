@@ -1,6 +1,6 @@
 {
   "name": "jwt-studio",
-  "version": "1.10.0",
+  "version": "1.10.1",
   "description": "A studio for working with JSON Web Tokens",
   "author": "MiguelRipoll23",
   "repository": {
