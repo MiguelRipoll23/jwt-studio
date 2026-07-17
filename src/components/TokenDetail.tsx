@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Button } from '@openai/apps-sdk-ui/components/Button';
-import { Textarea } from '@openai/apps-sdk-ui/components/Textarea';
-import { Alert } from '@openai/apps-sdk-ui/components/Alert';
-import { Badge } from '@openai/apps-sdk-ui/components/Badge';
+import { Button } from './ui/button';
+import { Textarea } from './ui/textarea';
+import { StatusAlert } from './ui-ext/status-alert';
+import { Badge } from './ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 
 import { CheckCircle, Copy, AlertTriangle, KeyRound, Trash2, Pencil } from 'lucide-react';
 import { getIcon } from './IconPicker';
@@ -94,9 +95,9 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
 
   if (!selectedProject || !selectedToken || !selectedProjectId || !selectedTokenId) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-[var(--gray-700)] gap-3">
-        <KeyRound className="w-5 h-5 text-[var(--gray-900)]" />
-        <p className="text-sm text-[var(--gray-700)]">Select a token to view and edit</p>
+      <div className="flex flex-col items-center justify-center h-full text-muted-foreground gap-3">
+        <KeyRound className="size-5" />
+        <p className="text-sm">Select a token to view and edit</p>
       </div>
     );
   }
@@ -106,66 +107,63 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Token Header */}
-      <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--alpha-08)] shrink-0">
+      <div className="flex items-center justify-between px-5 py-3 border-b shrink-0">
         <div className="flex items-center gap-2">
-          <TokenIcon className="w-5 h-5 text-[var(--gray-900)]" />
-          <h3 className="font-semibold text-[var(--gray-900)] mb-0.5">{selectedToken.name}</h3>
+          <TokenIcon className="size-5" />
+          <h3 className="font-semibold mb-0.5">{selectedToken.name}</h3>
         </div>
         <div className="flex items-center gap-3">
           <Button
-            color="secondary"
             variant="ghost"
-            size="xs"
-            uniform
+            size="icon-xs"
             onClick={() => setShowTokenEdit(true)}
             title="Edit token"
           >
-            <Pencil className="w-5 h-5 text-[var(--gray-900)]" />
+            <Pencil className="size-5" />
           </Button>
           <Button
-            color="danger"
             variant="ghost"
-            size="xs"
-            uniform
+            size="icon-xs"
+            className="text-destructive hover:text-destructive"
             onClick={() => store.deleteToken(selectedProjectId, selectedTokenId)}
             title="Delete token"
           >
-            <Trash2 className="w-5 h-5" />
+            <Trash2 className="size-5" />
           </Button>
         </div>
       </div>
 
       {/* Edit Token Modal */}
-      {showTokenEdit && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-[var(--gray-0)] rounded-xl shadow-xl border border-[var(--alpha-08)] w-full max-w-md mx-4 p-6">
-            <h3 className="text-lg font-semibold text-[var(--gray-900)] mb-4">Edit Token</h3>
-            <TokenForm
-              initial={selectedToken}
-              onSubmit={data => {
-                store.updateToken(selectedProjectId, selectedTokenId, { name: data.name, icon: data.icon });
-                setShowTokenEdit(false);
-                regenerateJWT();
-              }}
-              onCancel={() => setShowTokenEdit(false)}
-            />
-          </div>
-        </div>
-      )}
+      <Dialog open={showTokenEdit} onOpenChange={setShowTokenEdit}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Token</DialogTitle>
+          </DialogHeader>
+          <TokenForm
+            initial={selectedToken}
+            onSubmit={data => {
+              store.updateToken(selectedProjectId, selectedTokenId, { name: data.name, icon: data.icon });
+              setShowTokenEdit(false);
+              regenerateJWT();
+            }}
+            onCancel={() => setShowTokenEdit(false)}
+          />
+        </DialogContent>
+      </Dialog>
 
-      <div className="flex-1 overflow-y-auto flex flex-col gap-0 divide-y divide-[var(--alpha-08)]">
+      <div className="flex-1 overflow-y-auto flex flex-col gap-0 divide-y">
         {/* Payload Editor */}
         <div className="px-5 py-4 flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-[var(--gray-900)]">Payload</label>
+            <label className="text-sm font-medium">Payload</label>
             {payloadError ? (
-              <Badge color="danger" size="sm">
-                <AlertTriangle className="w-4 h-4 mr-1" />
+              <Badge variant="destructive">
+                <AlertTriangle className="size-4 mr-1" />
                 Invalid JSON
               </Badge>
             ) : (
-              <Badge color="success" size="sm">
-                <CheckCircle className="w-4 h-4 mr-1" />
+              <Badge className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400">
+                <CheckCircle className="size-4 mr-1" />
                 Valid
               </Badge>
             )}
@@ -174,32 +172,29 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
             value={payloadText}
             onChange={e => handlePayloadChange(e.target.value)}
             rows={8}
-            autoResize
-            maxRows={16}
-            invalid={!!payloadError}
+            aria-invalid={!!payloadError}
             className="font-mono text-sm"
           />
           {payloadError && (
-            <Alert color="danger" variant="soft" description={payloadError} />
+            <StatusAlert variant="danger" description={payloadError} />
           )}
         </div>
 
         {/* JWT Output */}
         <div className="px-5 py-4 flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-[var(--gray-900)]">Signed token</label>
+            <label className="text-sm font-medium">Signed token</label>
             <div className="flex items-center gap-2">
-              
+
               {jwt && (
   <div className="relative">
     <Button
-      color="secondary"
-      variant={copied ? 'soft' : 'ghost'}
+      variant={copied ? 'secondary' : 'ghost'}
       size="xs"
       onClick={handleCopy}
     >
-      <Copy className="w-5 h-5 text-[var(--gray-900)]" />
-      <span className="text-[var(--gray-900)]">{copied ? 'Copied!' : 'Copy'}</span>
+      <Copy className="size-5" />
+      <span>{copied ? 'Copied!' : 'Copy'}</span>
     </Button>
   </div>
 )}
@@ -207,34 +202,33 @@ export function TokenDetail({ store, appSettings }: TokenDetailProps) {
           </div>
 
           {jwtError && (
-            <Alert
-              color="danger"
-              variant="soft"
+            <StatusAlert
+              variant="danger"
               title="Signing failed"
               description={jwtError}
             />
           )}
 
           {isGenerating && (
-            <div className="text-xs text-[var(--gray-700)] py-2">Generating...</div>
+            <div className="text-xs text-muted-foreground py-2">Generating...</div>
           )}
 
           {jwt && !isGenerating && (
             <div
-              className="relative font-mono text-xs break-all text-[var(--gray-800)] select-all cursor-text"
+              className="relative font-mono text-xs break-all text-foreground/80 select-all cursor-text"
               onClick={handleCopy}
               title="Click to copy"
             >
               <span className="text-[#e67c73]">{jwt.split('.')[0]}</span>
-              <span className="text-[var(--gray-700)]">.</span>
+              <span className="text-muted-foreground">.</span>
               <span className="text-[#4caf8a]">{jwt.split('.')[1]}</span>
-              <span className="text-[var(--gray-700)]">.</span>
+              <span className="text-muted-foreground">.</span>
               <span className="text-[#6fa8dc]">{jwt.split('.')[2]}</span>
             </div>
           )}
 
           {!jwt && !isGenerating && !jwtError && (
-            <div className="text-xs text-[var(--gray-700)] py-2">JWT will appear here</div>
+            <div className="text-xs text-muted-foreground py-2">JWT will appear here</div>
           )}
         </div>
       </div>

@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react-swc'
 import tailwindcss from '@tailwindcss/vite'
 import electron from 'vite-plugin-electron/simple'
 import { readFileSync } from 'node:fs'
+import path from 'node:path'
 
 const pkg = JSON.parse(readFileSync('./package.json', 'utf-8')) as { version: string }
 
@@ -11,14 +12,19 @@ export default defineConfig({
   define: {
     __APP_VERSION__: JSON.stringify(pkg.version),
   },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
   build: {
     // Electron ships its own Chromium, so target esnext to skip transpilation overhead
     target: 'esnext',
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router'],
-          jose: ['jose'],
+        manualChunks: id => {
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) return 'vendor'
+          if (id.includes('node_modules/jose')) return 'jose'
         },
       },
     },
@@ -31,8 +37,8 @@ export default defineConfig({
         entry: 'electron/main.ts',
         vite: {
           build: {
-            // Match Electron 40's bundled Node.js version
-            target: 'node22',
+            // Match Electron 43's bundled Node.js version
+            target: 'node24',
           },
         },
       },
@@ -40,7 +46,7 @@ export default defineConfig({
         input: 'electron/preload.ts',
         vite: {
           build: {
-            target: 'node22',
+            target: 'node24',
           },
         },
       },

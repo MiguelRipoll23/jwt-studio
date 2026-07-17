@@ -1,9 +1,9 @@
 import { useState, type FormEvent } from 'react';
-import { Button } from '@openai/apps-sdk-ui/components/Button';
-import { Input } from '@openai/apps-sdk-ui/components/Input';
-import { Select } from '@openai/apps-sdk-ui/components/Select';
-import { Textarea } from '@openai/apps-sdk-ui/components/Textarea';
-import { Alert } from '@openai/apps-sdk-ui/components/Alert';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Textarea } from './ui/textarea';
+import { StatusAlert } from './ui-ext/status-alert';
 import { Eye, EyeOff } from 'lucide-react';
 import { IconPicker } from './IconPicker';
 import type { Project, Algorithm } from '../types';
@@ -16,9 +16,6 @@ interface ProjectFormProps {
   defaultAlgorithm?: Algorithm;
   defaultDuration?: string;
 }
-
-const ALGORITHM_OPTIONS = ALGORITHMS.map(a => ({ value: a, label: a }));
-const DURATION_OPTIONS = DURATIONS.map(d => ({ value: d.value, label: d.label }));
 
 export function ProjectForm({ initial, onSubmit, onCancel, defaultAlgorithm = 'HS256', defaultDuration = '1d' }: ProjectFormProps) {
   const [name, setName] = useState(initial?.name ?? '');
@@ -39,12 +36,6 @@ export function ProjectForm({ initial, onSubmit, onCancel, defaultAlgorithm = 'H
 
   const hmac = isHmacAlgorithm(algorithm);
 
-  function handleAlgorithmChange(option: { value: string }) {
-    const alg = option.value as Algorithm;
-    setAlgorithm(alg);
-    setError('');
-  }
-
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!name.trim()) { setError('Project name is required.'); return; }
@@ -63,11 +54,11 @@ export function ProjectForm({ initial, onSubmit, onCancel, defaultAlgorithm = 'H
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       {error && (
-        <Alert color="danger" variant="soft" description={error} />
+        <StatusAlert variant="danger" description={error} />
       )}
 
       <div className="flex flex-col gap-1">
-        <label className="text-sm font-medium text-[var(--gray-700)]">Project Name</label>
+        <label className="text-sm font-medium text-muted-foreground">Project Name</label>
         <Input
           placeholder="My API"
           value={name}
@@ -77,78 +68,87 @@ export function ProjectForm({ initial, onSubmit, onCancel, defaultAlgorithm = 'H
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className="text-sm font-medium text-[var(--gray-700)]">Icon</label>
+        <label className="text-sm font-medium text-muted-foreground">Icon</label>
         <IconPicker value={icon} onChange={setIcon} />
       </div>
 
       <div className="flex gap-3">
         <div className="flex flex-col gap-1 flex-1">
-          <label className="text-sm font-medium text-[var(--gray-700)]">Algorithm</label>
-          <Select
-            options={ALGORITHM_OPTIONS}
-            value={algorithm}
-            onChange={handleAlgorithmChange}
-            variant="outline"
-            placeholder="Select algorithm..."
-          />
+          <label className="text-sm font-medium text-muted-foreground">Algorithm</label>
+          <Select value={algorithm} onValueChange={value => { setAlgorithm(value as Algorithm); setError(''); }}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select algorithm..." />
+            </SelectTrigger>
+            <SelectContent>
+              {ALGORITHMS.map(a => (
+                <SelectItem key={a} value={a}>{a}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <div className="flex flex-col gap-1 flex-1">
-          <label className="text-sm font-medium text-[var(--gray-700)]">Token Duration</label>
-          <Select
-            options={DURATION_OPTIONS}
-            value={duration}
-            onChange={opt => setDuration(opt.value)}
-            variant="outline"
-            placeholder="Select duration..."
-          />
+          <label className="text-sm font-medium text-muted-foreground">Token Duration</label>
+          <Select value={duration} onValueChange={value => setDuration(value ?? duration)}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select duration..." />
+            </SelectTrigger>
+            <SelectContent>
+              {DURATIONS.map(d => (
+                <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
       {hmac ? (
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-[var(--gray-700)]">Secret</label>
-          <Input
-            type={showSecret ? 'text' : 'password'}
-            placeholder="your-secret-key"
-            value={secret}
-            onChange={e => setSecret(e.target.value)}
-            endAdornment={
-              <button type="button" onClick={() => setShowSecret(v => !v)} className="flex items-center text-[var(--gray-700)] hover:text-[var(--gray-700)]">
-                {showSecret ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-              </button>
-            }
-          />
+          <label className="text-sm font-medium text-muted-foreground">Secret</label>
+          <div className="relative">
+            <Input
+              type={showSecret ? 'text' : 'password'}
+              placeholder="your-secret-key"
+              value={secret}
+              onChange={e => setSecret(e.target.value)}
+              className="pr-9"
+            />
+            <button
+              type="button"
+              onClick={() => setShowSecret(v => !v)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center text-muted-foreground hover:text-foreground"
+            >
+              {showSecret ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+            </button>
+          </div>
         </div>
       ) : (
         <>
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-[var(--gray-700)]">Private Key (PEM)</label>
+            <label className="text-sm font-medium text-muted-foreground">Private Key (PEM)</label>
             <Textarea
               placeholder="-----BEGIN PRIVATE KEY-----&#10;...&#10;-----END PRIVATE KEY-----"
               value={privateKey}
               onChange={e => setPrivateKey(e.target.value)}
               rows={4}
-              autoResize
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-[var(--gray-700)]">Public Key (PEM) — optional</label>
+            <label className="text-sm font-medium text-muted-foreground">Public Key (PEM) — optional</label>
             <Textarea
               placeholder="-----BEGIN PUBLIC KEY-----&#10;...&#10;-----END PUBLIC KEY-----"
               value={publicKey}
               onChange={e => setPublicKey(e.target.value)}
               rows={3}
-              autoResize
             />
           </div>
         </>
       )}
 
       <div className="flex gap-2 justify-end pt-2">
-        <Button color="secondary" variant="ghost" onClick={onCancel} type="button">
+        <Button variant="ghost" onClick={onCancel} type="button">
           Cancel
         </Button>
-        <Button color="primary" variant="solid" type="submit">
+        <Button type="submit">
           {initial ? 'Save Changes' : 'Create Project'}
         </Button>
       </div>
