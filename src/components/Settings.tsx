@@ -1,17 +1,23 @@
 import { useState, useEffect } from 'react';
-import { Button } from '@openai/apps-sdk-ui/components/Button';
-import { Alert } from '@openai/apps-sdk-ui/components/Alert';
-import { Badge } from '@openai/apps-sdk-ui/components/Badge';
-import { Select } from '@openai/apps-sdk-ui/components/Select';
-import { Switch } from '@openai/apps-sdk-ui/components/Switch';
-import { applyDocumentTheme } from '@openai/apps-sdk-ui/theme';
-import { Download, Upload, CheckCircle, Settings as SettingsIcon, X, ShieldCheck, Sparkles, Network, Trash2, Info, RefreshCw } from 'lucide-react';
+import { Button } from './ui/button';
+import { StatusAlert } from './ui-ext/status-alert';
+import { Badge } from './ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Switch } from './ui/switch';
+import { Dialog, DialogContent } from './ui/dialog';
+import { applyDocumentTheme, THEME_KEY } from '../lib/theme';
+import { Download, Upload, CheckCircle, Settings as SettingsIcon, ShieldCheck, Sparkles, Network, Trash2, Info, RefreshCw } from 'lucide-react';
 import type { Project, ThemeMode } from '../types';
 import { ALGORITHMS, DURATIONS } from '../types';
 import type { AppSettingsStore } from '../appSettings';
-import { THEME_KEY } from '../main';
 
 type Section = 'general' | 'appearance' | 'export-import' | 'about';
+
+const THEME_MODE_LABELS: Record<ThemeMode, string> = {
+  system: 'Follow system',
+  light: 'Light',
+  dark: 'Dark',
+};
 
 const NAV: { id: Section; label: string; Icon: React.ComponentType<React.SVGProps<SVGSVGElement>> }[] = [
   { id: 'general', label: 'General', Icon: SettingsIcon },
@@ -19,9 +25,6 @@ const NAV: { id: Section; label: string; Icon: React.ComponentType<React.SVGProp
   { id: 'export-import', label: 'Export / Import', Icon: Network },
   { id: 'about', label: 'About', Icon: Info },
 ];
-
-const ALGORITHM_OPTIONS = ALGORITHMS.map(a => ({ value: a, label: a }));
-const DURATION_OPTIONS = DURATIONS.map(d => ({ value: d.value, label: d.label }));
 
 function compareVersions(a: string, b: string): number {
   const pa = a.split('.').map(Number);
@@ -145,26 +148,25 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/40 z-40" />
-      <div className="relative z-50 bg-[var(--gray-0)] rounded-xl shadow-xl border border-[var(--alpha-08)] w-full max-w-2xl mx-4 flex flex-col overflow-hidden" style={{ height: '520px' }}>
-
+    <Dialog open onOpenChange={open => { if (!open) onClose(); }}>
+      <DialogContent
+        showCloseButton
+        className="sm:max-w-2xl p-0 gap-0 flex flex-col overflow-hidden"
+        style={{ height: '520px' }}
+      >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-[var(--alpha-08)] shrink-0">
+        <div className="flex items-center justify-between px-5 py-3.5 border-b shrink-0">
           <div className="flex items-center gap-2.5">
-            <SettingsIcon className="w-5 h-5 text-[var(--gray-900)]" />
-            <span className="font-semibold text-[var(--gray-900)]">Settings</span>
+            <SettingsIcon className="size-5" />
+            <span className="font-semibold">Settings</span>
           </div>
-          <Button color="secondary" variant="ghost" size="xs" uniform onClick={onClose}>
-            <X className="w-5 h-5 text-[var(--gray-900)]" />
-          </Button>
         </div>
 
         {/* Body: sidebar + content */}
         <div className="flex flex-1 overflow-hidden">
 
           {/* Settings Sidebar */}
-          <nav className="w-44 shrink-0 border-r border-[var(--alpha-08)] bg-[var(--gray-50)] py-2 flex flex-col gap-0.5 px-2">
+          <nav className="w-44 shrink-0 border-r bg-muted py-2 flex flex-col gap-0.5 px-2">
             {NAV.map(({ id, label, Icon }) => (
               <button
                 key={id}
@@ -172,11 +174,11 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                 className={[
                   'flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-left text-sm transition-colors',
                   section === id
-                    ? 'bg-[var(--alpha-08)] text-[var(--gray-900)] font-medium'
-                    : 'text-[var(--gray-700)] hover:bg-[var(--alpha-05)] hover:text-[var(--gray-900)]',
+                    ? 'bg-accent text-foreground font-medium'
+                    : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground',
                 ].join(' ')}
               >
-                <Icon className="w-4 h-4 shrink-0" />
+                <Icon className="size-4 shrink-0" />
                 {label}
               </button>
             ))}
@@ -189,50 +191,60 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
             {section === 'general' && (
               <div className="flex flex-col gap-5">
                 <div>
-                  <h3 className="text-sm font-semibold text-[var(--gray-900)] mb-3">Defaults for new projects</h3>
+                  <h3 className="text-sm font-semibold mb-3">Defaults for new projects</h3>
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center justify-between gap-4">
                       <div>
-                        <p className="text-sm text-[var(--gray-900)]">Default algorithm</p>
-                        <p className="text-xs text-[var(--gray-700)]">Used when creating a new project</p>
+                        <p className="text-sm">Default algorithm</p>
+                        <p className="text-xs text-muted-foreground">Used when creating a new project</p>
                       </div>
                       <div className="w-32 shrink-0">
                         <Select
-                          options={ALGORITHM_OPTIONS}
                           value={settings.defaultAlgorithm}
-                          onChange={opt => updateSettings({ defaultAlgorithm: opt.value as typeof settings.defaultAlgorithm })}
-                          size="sm"
-                          variant="outline"
-                          placeholder="Select algorithm..."
-                        />
+                          onValueChange={value => updateSettings({ defaultAlgorithm: value as typeof settings.defaultAlgorithm })}
+                        >
+                          <SelectTrigger size="sm" className="w-full">
+                            <SelectValue placeholder="Select algorithm..." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {ALGORITHMS.map(a => (
+                              <SelectItem key={a} value={a}>{a}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
                     </div>
                     <div className="flex items-center justify-between gap-4">
                       <div>
-                        <p className="text-sm text-[var(--gray-900)]">Default token duration</p>
-                        <p className="text-xs text-[var(--gray-700)]">Expiry applied to new project tokens</p>
+                        <p className="text-sm">Default token duration</p>
+                        <p className="text-xs text-muted-foreground">Expiry applied to new project tokens</p>
                       </div>
                       <div className="w-32 shrink-0">
                         <Select
-                          options={DURATION_OPTIONS}
                           value={settings.defaultDuration || '1 day'}
-                          onChange={opt => updateSettings({ defaultDuration: opt.value })}
-                          size="sm"
-                          variant="outline"
-                          placeholder="Select duration..."
-                        />
+                          onValueChange={value => { if (value) updateSettings({ defaultDuration: value }); }}
+                        >
+                          <SelectTrigger size="sm" className="w-full">
+                            <SelectValue placeholder="Select duration..." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {DURATIONS.map(d => (
+                              <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="border-t border-[var(--alpha-05)] pt-4">
-                  <h3 className="text-sm font-semibold text-[var(--gray-900)] mb-3">Behaviour</h3>
+                <div className="border-t pt-4">
+                  <h3 className="text-sm font-semibold mb-3">Behaviour</h3>
                   <div className="flex flex-col gap-4">
                     <div className="flex items-center justify-between gap-4">
                       <div>
-                        <p className="text-sm text-[var(--gray-900)]">Confirm before deleting</p>
-                        <p className="text-xs text-[var(--gray-700)]">Show a confirmation prompt when deleting projects or tokens</p>
+                        <p className="text-sm">Confirm before deleting</p>
+                        <p className="text-xs text-muted-foreground">Show a confirmation prompt when deleting projects or tokens</p>
                       </div>
                       <Switch
                         checked={settings.confirmDelete}
@@ -241,8 +253,8 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                     </div>
                     <div className="flex items-center justify-between gap-4">
                       <div>
-                        <p className="text-sm text-[var(--gray-900)]">Auto-copy token</p>
-                        <p className="text-xs text-[var(--gray-700)]">Automatically copy the signed token to clipboard when generated</p>
+                        <p className="text-sm">Auto-copy token</p>
+                        <p className="text-xs text-muted-foreground">Automatically copy the signed token to clipboard when generated</p>
                       </div>
                       <Switch
                         checked={settings.autoCopyToken}
@@ -252,30 +264,28 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                   </div>
                 </div>
 
-                <div className="border-t border-[var(--alpha-05)] pt-4">
-                  <h3 className="text-sm font-semibold text-[var(--gray-900)] mb-3">Danger zone</h3>
+                <div className="border-t pt-4">
+                  <h3 className="text-sm font-semibold mb-3">Danger zone</h3>
                   {!confirmClear ? (
                     <Button
-                      color="danger"
-                      variant="soft"
+                      variant="destructive"
                       size="sm"
                       onClick={() => setConfirmClear(true)}
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="size-4" />
                       Clear all data
                     </Button>
                   ) : (
-                    <Alert
-                      color="danger"
-                      variant="soft"
+                    <StatusAlert
+                      variant="danger"
                       title="This will delete all projects and tokens."
                       description="This cannot be undone."
                       actions={
                         <div className="flex gap-2">
-                          <Button color="danger" variant="solid" size="xs" onClick={() => { onImport([]); setConfirmClear(false); }}>
+                          <Button variant="destructive" size="xs" onClick={() => { onImport([]); setConfirmClear(false); }}>
                             Delete everything
                           </Button>
-                          <Button color="secondary" variant="ghost" size="xs" onClick={() => setConfirmClear(false)}>
+                          <Button variant="ghost" size="xs" onClick={() => setConfirmClear(false)}>
                             Cancel
                           </Button>
                         </div>
@@ -290,24 +300,26 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
             {section === 'appearance' && (
               <div className="flex flex-col gap-5">
                 <div>
-                  <h3 className="text-sm font-semibold text-[var(--gray-900)] mb-3">Theme</h3>
+                  <h3 className="text-sm font-semibold mb-3">Theme</h3>
                   <div className="flex items-center justify-between gap-4">
                     <div>
-                      <p className="text-sm text-[var(--gray-900)]">Application theme</p>
-                      <p className="text-xs text-[var(--gray-700)]">Choose your preferred theme</p>
+                      <p className="text-sm">Application theme</p>
+                      <p className="text-xs text-muted-foreground">Choose your preferred theme</p>
                     </div>
                     <div className="w-40 shrink-0">
                       <Select
-                        options={[
-                          { value: 'system', label: 'Follow system' },
-                          { value: 'light', label: 'Light' },
-                          { value: 'dark', label: 'Dark' },
-                        ]}
                         value={settings.themeMode}
-                        onChange={opt => handleThemeChange(opt.value as ThemeMode)}
-                        size="sm"
-                        variant="outline"
-                      />
+                        onValueChange={value => handleThemeChange(value as ThemeMode)}
+                      >
+                        <SelectTrigger size="sm" className="w-full">
+                          <SelectValue>{(value: ThemeMode) => THEME_MODE_LABELS[value]}</SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="system">Follow system</SelectItem>
+                          <SelectItem value="light">Light</SelectItem>
+                          <SelectItem value="dark">Dark</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
                 </div>
@@ -321,82 +333,77 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                 <div className="flex flex-col gap-2">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-sm font-medium text-[var(--gray-900)]">Export config</p>
-                      <p className="text-xs text-[var(--gray-700)]">
+                      <p className="text-sm font-medium">Export config</p>
+                      <p className="text-xs text-muted-foreground">
                         Save all projects and tokens to a JSON file.
                         You can use this file to back up or transfer your setup.
                       </p>
                     </div>
                     <Button
-                      color="primary"
-                      variant="soft"
+                      variant="secondary"
                       size="sm"
                       onClick={handleExport}
                       disabled={projects.length === 0}
                     >
-                      <Download className="w-4 h-4 text-[var(--gray-900)]" />
+                      <Download className="size-4" />
                       Export
                     </Button>
                   </div>
                   {exportStatus === 'success' && (
-                    <Alert
-                      color="success"
-                      variant="soft"
-                      indicator={<CheckCircle className="w-4 h-4" />}
+                    <StatusAlert
+                      variant="success"
+                      indicator={<CheckCircle className="size-4" />}
                       description="Config exported successfully."
                     />
                   )}
                   {exportStatus === 'error' && (
-                    <Alert color="danger" variant="soft" description="Export failed. Try again." />
+                    <StatusAlert variant="danger" description="Export failed. Try again." />
                   )}
 
                 </div>
 
                 {/* Import */}
-                <div className="border-t border-[var(--alpha-05)] pt-4 flex flex-col gap-2">
+                <div className="border-t pt-4 flex flex-col gap-2">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-sm font-medium text-[var(--gray-900)]">Import config</p>
-                      <p className="text-xs text-[var(--gray-700)]">
+                      <p className="text-sm font-medium">Import config</p>
+                      <p className="text-xs text-muted-foreground">
                         Load projects from a previously exported config file.
                         This will replace all current data.
                       </p>
                     </div>
                     <Button
-                      color="secondary"
-                      variant="soft"
+                      variant="secondary"
                       size="sm"
                       onClick={handleImportPick}
                     >
-                      <Upload className="w-4 h-4 text-[var(--gray-900)]" />
+                      <Upload className="size-4" />
                       Import
                     </Button>
                   </div>
                   {importStatus === 'error' && (
-                    <Alert color="danger" variant="soft" description={importError || 'Failed to import config.'} />
+                    <StatusAlert variant="danger" description={importError || 'Failed to import config.'} />
                   )}
                   {importStatus === 'success' && (
-                    <Alert
-                      color="success"
-                      variant="soft"
-                      indicator={<CheckCircle className="w-4 h-4" />}
+                    <StatusAlert
+                      variant="success"
+                      indicator={<CheckCircle className="size-4" />}
                       description="Config imported successfully."
                     />
                   )}
                   {importStatus === 'confirm' && importPreview && (
-                    <Alert
-                      color="info"
-                      variant="soft"
-                      indicator={<ShieldCheck className="w-4 h-4" />}
+                    <StatusAlert
+                      variant="info"
+                      indicator={<ShieldCheck className="size-4" />}
                       title={`Import ${importPreview.length} project${importPreview.length !== 1 ? 's' : ''}?`}
                       description="All current projects and tokens will be replaced."
                       actions={
                         <div className="flex gap-2">
-                          <Button color="primary" variant="solid" size="xs" onClick={handleImportConfirm}>
-                            <CheckCircle className="w-3.5 h-3.5 text-[var(--gray-900)]" />
+                          <Button size="xs" onClick={handleImportConfirm}>
+                            <CheckCircle className="size-3.5" />
                             Confirm
                           </Button>
-                          <Button color="secondary" variant="ghost" size="xs" onClick={() => { setImportStatus('idle'); setImportPreview(null); }}>
+                          <Button variant="ghost" size="xs" onClick={() => { setImportStatus('idle'); setImportPreview(null); }}>
                             Cancel
                           </Button>
                         </div>
@@ -411,77 +418,72 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
             {section === 'about' && (
               <div className="flex flex-col gap-5">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[var(--gray-900)] flex items-center justify-center">
-                    <Sparkles className="w-5 h-5 text-[var(--gray-0)]" />
+                  <div className="w-10 h-10 rounded-xl bg-foreground flex items-center justify-center">
+                    <Sparkles className="size-5 text-background" />
                   </div>
                   <div>
-                    <p className="font-semibold text-[var(--gray-900)]">JWT Studio</p>
-                    <p className="text-xs text-[var(--gray-700)]">
+                    <p className="font-semibold">JWT Studio</p>
+                    <p className="text-xs text-muted-foreground">
                       Local JWT project manager for developers
                     </p>
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-2 text-sm">
-                  <div className="flex justify-between py-2 border-b border-[var(--alpha-05)]">
-                    <span className="text-[var(--gray-700)]">Version</span>
-                    <Badge color="secondary" variant="soft" size="sm">v{__APP_VERSION__}</Badge>
+                  <div className="flex justify-between py-2 border-b">
+                    <span className="text-muted-foreground">Version</span>
+                    <Badge variant="secondary">v{__APP_VERSION__}</Badge>
                   </div>
-                  <div className="flex justify-between py-2 border-b border-[var(--alpha-05)]">
-                    <span className="text-[var(--gray-700)]">Projects</span>
-                    <span className="font-medium text-[var(--gray-900)]">{projects.length}</span>
+                  <div className="flex justify-between py-2 border-b">
+                    <span className="text-muted-foreground">Projects</span>
+                    <span className="font-medium">{projects.length}</span>
                   </div>
-                  <div className="flex justify-between py-2 border-b border-[var(--alpha-05)]">
-                    <span className="text-[var(--gray-700)]">Tokens</span>
-                    <span className="font-medium text-[var(--gray-900)]">
+                  <div className="flex justify-between py-2 border-b">
+                    <span className="text-muted-foreground">Tokens</span>
+                    <span className="font-medium">
                       {projects.reduce((a, p) => a + p.tokens.length, 0)}
                     </span>
                   </div>
                 </div>
 
                 {/* Update checker */}
-                <div className="border-t border-[var(--alpha-05)] pt-4 flex flex-col gap-3">
+                <div className="border-t pt-4 flex flex-col gap-3">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-sm font-medium text-[var(--gray-900)]">Updates</p>
-                      <p className="text-xs text-[var(--gray-700)]">Check for a newer version on GitHub</p>
+                      <p className="text-sm font-medium">Updates</p>
+                      <p className="text-xs text-muted-foreground">Check for a newer version on GitHub</p>
                     </div>
                     <Button
-                      color="secondary"
-                      variant="soft"
+                      variant="secondary"
                       size="sm"
                       onClick={handleCheckForUpdates}
                       disabled={updateStatus === 'checking'}
                     >
-                      <RefreshCw className="w-4 h-4 text-[var(--gray-900)]" />
+                      <RefreshCw className="size-4" />
                       {updateStatus === 'checking' ? 'Checking…' : 'Check for updates'}
                     </Button>
                   </div>
 
                   {updateStatus === 'up-to-date' && (
-                    <Alert
-                      color="success"
-                      variant="soft"
-                      indicator={<CheckCircle className="w-4 h-4" />}
+                    <StatusAlert
+                      variant="success"
+                      indicator={<CheckCircle className="size-4" />}
                       description="You're on the latest version."
                     />
                   )}
 
                   {updateStatus === 'available' && latestRelease && (
-                    <Alert
-                      color="info"
-                      variant="soft"
-                      indicator={<Download className="w-4 h-4" />}
+                    <StatusAlert
+                      variant="info"
+                      indicator={<Download className="size-4" />}
                       title={`Version ${latestRelease.version} is available`}
                       description="A new release is ready to download and install."
                       actions={
                         <Button
-                          color="primary"
-                          variant="solid"
                           size="xs"
                           onClick={() => window.electronAPI?.openExternal(latestRelease.url)}
                         >
-                          <Download className="w-3.5 h-3.5 text-[var(--gray-900)]" />
+                          <Download className="size-3.5" />
                           Download update
                         </Button>
                       }
@@ -489,34 +491,29 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                   )}
 
                   {updateStatus === 'error' && (
-                    <Alert
-                      color="danger"
-                      variant="soft"
+                    <StatusAlert
+                      variant="danger"
                       description="Could not check for updates. Please try again later."
                     />
                   )}
 
                   {downloadProgress && (
-                    <Alert
-                      color="info"
-                      variant="soft"
-                      indicator={<Download className="w-4 h-4" />}
+                    <StatusAlert
+                      variant="info"
+                      indicator={<Download className="size-4" />}
                       title="Downloading update…"
                       description={`${Math.round(downloadProgress.percent)}% complete`}
                     />
                   )}
 
                   {updateReady && (
-                    <Alert
-                      color="success"
-                      variant="soft"
-                      indicator={<CheckCircle className="w-4 h-4" />}
+                    <StatusAlert
+                      variant="success"
+                      indicator={<CheckCircle className="size-4" />}
                       title="Update ready to install"
                       description="The app will restart and install the update."
                       actions={
                         <Button
-                          color="primary"
-                          variant="solid"
                           size="xs"
                           onClick={() => window.electronAPI?.restartAndInstall()}
                         >
@@ -532,8 +529,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
 
           </div>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
-

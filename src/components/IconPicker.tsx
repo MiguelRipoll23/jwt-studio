@@ -15,8 +15,8 @@ import {
   Gamepad2, Dice1, Joystick, Music, Video, Camera, Image, ShoppingCart, ShoppingBag,
   type LucideIcon,
 } from 'lucide-react';
-import { Button } from '@openai/apps-sdk-ui/components/Button';
-import { Input } from '@openai/apps-sdk-ui/components/Input';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
 import { useState, useMemo } from 'react';
 
 const ICON_MAP = {
@@ -105,17 +105,19 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
 
   return (
     <div className="flex flex-col gap-2 w-full">
-      <Input
-        placeholder="Search icons..."
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-        startAdornment={<Search className="w-4 h-4 text-[var(--gray-700)]" />}
-        size="sm"
-      />
+      <div className="relative">
+        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
+        <Input
+          placeholder="Search icons..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="h-7 pl-8"
+        />
+      </div>
       <div className="max-h-40 overflow-y-auto space-y-2 w-full -mx-2 px-2">
         {Object.entries(filteredCategories).map(([category, icons]) => (
           <div key={category}>
-            <h4 className="text-xs font-semibold text-[var(--gray-700)] mb-1 px-1">{category}</h4>
+            <h4 className="text-xs font-semibold text-muted-foreground mb-1 px-1">{category}</h4>
             <div className="grid gap-0.5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(2rem, 1fr))' }}>
               {icons.map(name => {
                 const Icon = getIcon(name);
@@ -123,15 +125,12 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
                 return (
                   <Button
                     key={name}
-                    color="secondary"
-                    variant={value === name ? 'solid' : 'ghost'}
-                    size="sm"
-                    uniform
-                    className="px-0.5 py-0.5"
+                    variant={value === name ? 'default' : 'ghost'}
+                    size="icon-sm"
                     title={name}
                     onClick={() => onChange(name)}
                   >
-                    <Icon className="w-5 h-5" />
+                    <Icon className="size-5" />
                   </Button>
                 );
               })}

@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { Button } from '@openai/apps-sdk-ui/components/Button';
+import { Button } from './ui/button';
 import { Plus, Moon, Sun, KeyRound, Settings, PanelLeftClose } from 'lucide-react';
 import { getIcon } from './IconPicker';
 import type { ProjectStore } from '../store';
 import type { Project, ThemeMode } from '../types';
 import type { AppSettingsStore } from '../appSettings';
-import { applyDocumentTheme } from '@openai/apps-sdk-ui/theme';
-import { THEME_KEY } from '../main';
+import { applyDocumentTheme, THEME_KEY } from '../lib/theme';
 
 interface SidebarProps {
   store: ProjectStore;
@@ -35,11 +34,11 @@ function ProjectItem({
         'flex items-center gap-2.5 w-full rounded-lg text-left transition-colors text-sm',
         collapsed ? 'justify-center px-2 py-2' : 'px-3 py-2',
         selected
-          ? 'bg-[var(--alpha-15)] text-[var(--gray-900)] font-medium'
-          : 'text-[var(--gray-900)] hover:bg-[var(--alpha-05)]',
+          ? 'bg-accent text-foreground font-medium'
+          : 'text-foreground hover:bg-accent/50',
       ].join(' ')}
     >
-      <Icon className="w-5 h-5 shrink-0 text-[var(--gray-900)]" />
+      <Icon className="size-5 shrink-0" />
       {!collapsed && <span className="truncate">{project.name}</span>}
     </button>
   );
@@ -71,47 +70,42 @@ export function Sidebar({ store, appSettings, onNewProject, onOpenSettings }: Si
 
   const [collapsed, setCollapsed] = useState(false);
   return (
-    <aside className={`flex flex-col h-full ${collapsed ? 'w-14' : 'w-60'} shrink-0 border-r border-[var(--alpha-08)] bg-[var(--gray-50)] transition-all duration-200 overflow-hidden`}>
+    <aside className={`flex flex-col h-full ${collapsed ? 'w-14' : 'w-60'} shrink-0 border-r bg-muted transition-all duration-200 overflow-hidden`}>
       {/* Logo + Collapse Button */}
-      <div className={`flex items-center border-b border-[var(--alpha-08)] px-3 py-3 ${collapsed ? 'justify-center' : 'justify-between'}`}>
-        {!collapsed && <KeyRound className="w-5 h-5 text-[var(--gray-900)]" />}
+      <div className={`flex items-center border-b px-3 py-3 ${collapsed ? 'justify-center' : 'justify-between'}`}>
+        {!collapsed && <KeyRound className="size-5" />}
         <Button
-          color="secondary"
           variant="ghost"
-          size="xs"
-          uniform
+          size="icon-xs"
           onClick={() => setCollapsed(c => !c)}
           title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
-          <PanelLeftClose className="w-5 h-5 text-[var(--gray-900)] transition-transform duration-200" style={{ transform: collapsed ? 'rotate(180deg)' : undefined }} />
+          <PanelLeftClose className="size-5 transition-transform duration-200" style={{ transform: collapsed ? 'rotate(180deg)' : undefined }} />
         </Button>
       </div>
       {/* Header */}
       {!collapsed && (
         <div className="flex items-center justify-between px-4 py-3">
-          <span className="text-xs font-semibold text-[var(--gray-900)] capitalize">Projects</span>
+          <span className="text-xs font-semibold capitalize">Projects</span>
           <Button
-            color="secondary"
             variant="ghost"
             size="xs"
             onClick={onNewProject}
             title="New Project"
           >
-            <Plus className="w-5 h-5 text-[var(--gray-900)]" />
+            <Plus className="size-5" />
           </Button>
         </div>
       )}
       {collapsed && (
         <div className="flex justify-center px-2 py-3">
           <Button
-            color="secondary"
             variant="ghost"
-            size="xs"
-            uniform
+            size="icon-xs"
             onClick={onNewProject}
             title="New Project"
           >
-            <Plus className="w-5 h-5 text-[var(--gray-900)]" />
+            <Plus className="size-5" />
           </Button>
         </div>
       )}
@@ -134,32 +128,27 @@ export function Sidebar({ store, appSettings, onNewProject, onOpenSettings }: Si
       </div>
 
       {/* Footer: version + settings + theme */}
-      <div className={`flex items-center border-t border-[var(--alpha-08)] px-2 py-2 ${collapsed ? 'flex-col gap-1' : 'justify-between px-4'}`}>
-        {!collapsed && <span className="text-xs text-[var(--gray-900)]">v{__APP_VERSION__}</span>}
+      <div className={`flex items-center border-t px-2 py-2 ${collapsed ? 'flex-col gap-1' : 'justify-between px-4'}`}>
+        {!collapsed && <span className="text-xs">v{__APP_VERSION__}</span>}
         <div className={`flex items-center gap-3 ${collapsed ? 'flex-col' : ''}`}>
           <Button
-            color="secondary"
             variant="ghost"
-            size="xs"
-            uniform
+            size="icon-xs"
             onClick={toggleTheme}
             title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
           >
-            {isDark ? <Sun className="w-5 h-5 text-[var(--gray-900)]" /> : <Moon className="w-5 h-5 text-[var(--gray-900)]" />}
+            {isDark ? <Sun className="size-5" /> : <Moon className="size-5" />}
           </Button>
           <Button
-            color="secondary"
             variant="ghost"
-            size="xs"
-            uniform
+            size="icon-xs"
             onClick={onOpenSettings}
             title="Settings"
           >
-            <Settings className="w-5 h-5 text-[var(--gray-900)]" />
+            <Settings className="size-5" />
           </Button>
         </div>
       </div>
     </aside>
   );
 }
-

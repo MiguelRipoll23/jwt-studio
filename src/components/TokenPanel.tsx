@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Button } from '@openai/apps-sdk-ui/components/Button';
-import { Badge } from '@openai/apps-sdk-ui/components/Badge';
-import { Alert } from '@openai/apps-sdk-ui/components/Alert';
+import { Button } from './ui/button';
+import { Badge } from './ui/badge';
+import { StatusAlert } from './ui-ext/status-alert';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Plus, Trash2, Pencil, KeyRound, Folder } from 'lucide-react';
 import { getIcon } from './IconPicker';
 import type { ProjectStore } from '../store';
@@ -30,8 +31,8 @@ function TokenItem({
       className={[
         'group flex items-center gap-2.5 w-full px-3 py-2 rounded-lg cursor-pointer transition-colors',
         selected
-          ? 'bg-[var(--alpha-15)] text-[var(--gray-900)] font-medium'
-          : 'hover:bg-[var(--alpha-05)] text-[var(--gray-900)]',
+          ? 'bg-accent text-foreground font-medium'
+          : 'hover:bg-accent/50 text-foreground',
       ].join(' ')}
       onClick={onClick}
       role="button"
@@ -39,7 +40,7 @@ function TokenItem({
       onKeyDown={e => e.key === 'Enter' && onClick()}
     >
       <div className="flex items-center gap-2">
-        <Icon className="w-5 h-5 shrink-0 text-[var(--gray-900)]" />
+        <Icon className="size-5 shrink-0" />
         <span className="truncate text-sm font-medium">{token.name}</span>
       </div>
 
@@ -55,8 +56,8 @@ export function TokenPanel({ store }: TokenPanelProps) {
 
   if (!selectedProject || !selectedProjectId) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-[var(--gray-700)] gap-2">
-        <Folder className="w-5 h-5" />
+      <div className="flex flex-col items-center justify-center h-full text-muted-foreground gap-2">
+        <Folder className="size-5" />
         <p className="text-sm">Select a project</p>
       </div>
     );
@@ -70,38 +71,35 @@ export function TokenPanel({ store }: TokenPanelProps) {
   return (
     <div className="flex flex-col h-full">
       {/* Project Header */}
-      <div className="px-4 py-3 border-b border-[var(--alpha-08)]">
+      <div className="px-4 py-3 border-b">
         <div className="flex items-start justify-between gap-2 mb-2">
-          <h2 className="font-semibold text-[var(--gray-900)] truncate">{selectedProject.name}</h2>
+          <h2 className="font-semibold truncate">{selectedProject.name}</h2>
           <div className="flex items-center gap-3 shrink-0">
             <Button
-              color="secondary"
               variant="ghost"
-              size="xs"
-              uniform
+              size="icon-xs"
               onClick={() => setShowProjectEdit(true)}
               title="Edit project"
             >
-              <Pencil className="w-5 h-5 text-[var(--gray-900)]" />
+              <Pencil className="size-5" />
             </Button>
             <Button
-              color="danger"
               variant="ghost"
-              size="xs"
-              uniform
+              size="icon-xs"
+              className="text-destructive hover:text-destructive"
               onClick={() => setDeleteConfirm(true)}
               title="Delete project"
             >
-              <Trash2 className="w-5 h-5" />
+              <Trash2 className="size-5" />
             </Button>
           </div>
         </div>
         <div className="flex flex-wrap gap-1.5">
-          <Badge color="success" size="sm">
+          <Badge className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400">
             {selectedProject.algorithm}
           </Badge>
-          <Badge color="secondary" size="sm">{algorithmType}</Badge>
-          <Badge color="secondary" size="sm">
+          <Badge variant="secondary">{algorithmType}</Badge>
+          <Badge variant="secondary">
             {selectedProject.duration === 'never' ? 'No expiry' :
   selectedProject.duration
     .replace(/(\d+)d\b/, '$1 day')
@@ -115,18 +113,17 @@ export function TokenPanel({ store }: TokenPanelProps) {
       {/* Delete project confirmation */}
       {deleteConfirm && (
         <div className="px-3 py-2">
-          <Alert
-            color="danger"
-            variant="soft"
+          <StatusAlert
+            variant="danger"
             title="Delete project?"
             description="This will delete all tokens in this project."
             actions={
               <div className="flex gap-2">
-                <Button color="danger" variant="solid" size="xs" onClick={() => {
+                <Button variant="destructive" size="xs" onClick={() => {
                   store.deleteProject(selectedProjectId);
                   setDeleteConfirm(false);
                 }}>Delete</Button>
-                <Button color="secondary" variant="ghost" size="xs" onClick={() => setDeleteConfirm(false)}>Cancel</Button>
+                <Button variant="ghost" size="xs" onClick={() => setDeleteConfirm(false)}>Cancel</Button>
               </div>
             }
           />
@@ -134,44 +131,43 @@ export function TokenPanel({ store }: TokenPanelProps) {
       )}
 
       {/* Edit Project Modal */}
-      {showProjectEdit && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-[var(--gray-0)] rounded-xl shadow-xl border border-[var(--alpha-08)] w-full max-w-lg mx-4 p-6 max-h-[90vh] overflow-y-auto">
-            <h3 className="text-lg font-semibold text-[var(--gray-900)] mb-4">Edit Project</h3>
-            <ProjectForm
-              initial={selectedProject}
-              onSubmit={data => {
-                store.updateProject(selectedProjectId, data);
-                setShowProjectEdit(false);
-                setTimeout(() => {
-                  if (store.selectedTokenId) {
-                    store.selectToken(store.selectedTokenId);
-                  }
-                }, 0);
-              }}
-              onCancel={() => setShowProjectEdit(false)}
-            />
-          </div>
-        </div>
-      )}
+      <Dialog open={showProjectEdit} onOpenChange={setShowProjectEdit}>
+        <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Project</DialogTitle>
+          </DialogHeader>
+          <ProjectForm
+            initial={selectedProject}
+            onSubmit={data => {
+              store.updateProject(selectedProjectId, data);
+              setShowProjectEdit(false);
+              setTimeout(() => {
+                if (store.selectedTokenId) {
+                  store.selectToken(store.selectedTokenId);
+                }
+              }, 0);
+            }}
+            onCancel={() => setShowProjectEdit(false)}
+          />
+        </DialogContent>
+      </Dialog>
 
       {/* Tokens List */}
       <div className="flex-1 overflow-y-auto px-2 py-2">
         <div className="flex items-center justify-between px-2 mb-2">
-          <span className="text-xs font-semibold text-[var(--gray-900)] capitalize">Tokens</span>
+          <span className="text-xs font-semibold capitalize">Tokens</span>
           <Button
-            color="secondary"
             variant="ghost"
             size="xs"
             onClick={() => setShowTokenForm(true)}
             title="New Token"
           >
-            <Plus className="w-5 h-5 text-[var(--gray-900)]" />
+            <Plus className="size-5" />
           </Button>
         </div>
         {selectedProject.tokens.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-8 text-[var(--gray-700)] gap-2">
-            <KeyRound className="w-5 h-5" />
+          <div className="flex flex-col items-center justify-center py-8 text-muted-foreground gap-2">
+            <KeyRound className="size-5" />
             <p className="text-xs">No tokens yet</p>
           </div>
         ) : (
@@ -189,23 +185,21 @@ export function TokenPanel({ store }: TokenPanelProps) {
         )}
       </div>
 
-
-
       {/* New Token Form Modal */}
-      {showTokenForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-[var(--gray-0)] rounded-xl shadow-xl border border-[var(--alpha-08)] w-full max-w-md mx-4 p-6">
-            <h3 className="text-lg font-semibold text-[var(--gray-900)] mb-4">New Token</h3>
-            <TokenForm
-              onSubmit={data => {
-                store.createToken(selectedProjectId, data);
-                setShowTokenForm(false);
-              }}
-              onCancel={() => setShowTokenForm(false)}
-            />
-          </div>
-        </div>
-      )}
+      <Dialog open={showTokenForm} onOpenChange={setShowTokenForm}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>New Token</DialogTitle>
+          </DialogHeader>
+          <TokenForm
+            onSubmit={data => {
+              store.createToken(selectedProjectId, data);
+              setShowTokenForm(false);
+            }}
+            onCancel={() => setShowTokenForm(false)}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
