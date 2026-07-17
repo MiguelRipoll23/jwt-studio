@@ -172,10 +172,10 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                 key={id}
                 onClick={() => setSection(id)}
                 className={[
-                  'flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-left text-sm transition-colors',
+                  'flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-left text-sm transition-colors cursor-pointer',
                   section === id
-                    ? 'bg-accent text-foreground font-medium'
-                    : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground',
+                    ? 'bg-foreground/8 text-foreground font-medium'
+                    : 'text-muted-foreground hover:bg-foreground/5 hover:text-foreground',
                 ].join(' ')}
               >
                 <Icon className="size-4 shrink-0" />
@@ -430,15 +430,15 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                 </div>
 
                 <div className="flex flex-col gap-2 text-sm">
-                  <div className="flex justify-between py-2 border-b">
+                  <div className="flex justify-between py-1">
                     <span className="text-muted-foreground">Version</span>
                     <Badge variant="secondary">v{__APP_VERSION__}</Badge>
                   </div>
-                  <div className="flex justify-between py-2 border-b">
+                  <div className="flex justify-between py-1">
                     <span className="text-muted-foreground">Projects</span>
                     <span className="font-medium">{projects.length}</span>
                   </div>
-                  <div className="flex justify-between py-2 border-b">
+                  <div className="flex justify-between py-1">
                     <span className="text-muted-foreground">Tokens</span>
                     <span className="font-medium">
                       {projects.reduce((a, p) => a + p.tokens.length, 0)}
@@ -447,7 +447,7 @@ export function Settings({ projects, onImport, onClose, appSettings }: SettingsP
                 </div>
 
                 {/* Update checker */}
-                <div className="border-t pt-4 flex flex-col gap-3">
+                <div className="pt-4 flex flex-col gap-3">
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <p className="text-sm font-medium">Updates</p>
