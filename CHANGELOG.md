@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.10.0 - 2026-07-17
+
+## What's Changed
+* feat: migrate UI framework to shadcn/ui + Tailwind CSS v4 + base-ui/react by @MiguelRipoll23 in https://github.com/MiguelRipoll23/jwt-studio/pull/37
+* Bump version to v1.10.0-beta.1 by @github-actions[bot] in https://github.com/MiguelRipoll23/jwt-studio/pull/38
+* Bump version to v1.10.0 by @github-actions[bot] in https://github.com/MiguelRipoll23/jwt-studio/pull/39
+
+
+**Full Changelog**: https://github.com/MiguelRipoll23/jwt-studio/compare/v1.9.3...v1.10.0
+
+
 ## v1.10.0-beta.1 - 2026-07-17
 
 ## What's Changed
