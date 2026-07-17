@@ -31,8 +31,8 @@ function TokenItem({
       className={[
         'group flex items-center gap-2.5 w-full px-3 py-2 rounded-lg cursor-pointer transition-colors',
         selected
-          ? 'bg-accent text-foreground font-medium'
-          : 'hover:bg-accent/50 text-foreground',
+          ? 'bg-foreground/8 text-foreground font-medium'
+          : 'hover:bg-foreground/5 text-foreground',
       ].join(' ')}
       onClick={onClick}
       role="button"
