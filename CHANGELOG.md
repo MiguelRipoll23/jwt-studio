@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.10.1-beta.1 - 2026-07-17
+
+## What's Changed
+* fix: restore hover backgrounds and cursor pointer on interactive elements by @MiguelRipoll23 in https://github.com/MiguelRipoll23/jwt-studio/pull/40
+* Bump version to v1.10.1-beta.1 by @github-actions[bot] in https://github.com/MiguelRipoll23/jwt-studio/pull/41
+
+
+**Full Changelog**: https://github.com/MiguelRipoll23/jwt-studio/compare/v1.10.0...v1.10.1-beta.1
+
+
 ## v1.10.0 - 2026-07-17
 
 ## What's Changed
